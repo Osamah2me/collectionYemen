@@ -175,15 +175,23 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const NavLink = ({ target, label, isHighlight }: { target: any, label: string, isHighlight?: boolean }) => (
+  const NavLink = ({ target, label, isHighlight, onClick }: { target?: any, label: string, isHighlight?: boolean, onClick?: () => void }) => (
     <button 
-      onClick={() => handleSetView(target)}
+      onClick={onClick || (() => handleSetView(target))}
       className={`relative py-2 text-[12px] md:text-[14px] font-black uppercase tracking-[0.1em] transition-all group whitespace-nowrap ${view === target ? 'text-white' : isHighlight ? 'text-rose-500' : 'text-white/60 hover:text-white'}`}
     >
       {label}
       <span className={`absolute bottom-0 left-0 w-full h-0.5 ${isHighlight ? 'bg-rose-500' : 'bg-white'} transition-all duration-300 transform origin-left ${view === target ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
     </button>
   );
+
+  const scrollToSection = (id: string) => {
+    handleSetView('home');
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   const renderView = () => {
     switch (view) {
@@ -244,6 +252,8 @@ const AppContent: React.FC = () => {
           <nav className="hidden xl:flex items-center gap-6 lg:gap-8">
             <NavLink target="home" label={lang === 'ar' ? 'الرئيسية' : 'Home'} />
             <NavLink target="catalog" label={lang === 'ar' ? 'المتجر' : 'Shop'} />
+            <NavLink label={lang === 'ar' ? 'من نحن' : 'About Us'} onClick={() => scrollToSection('about-us')} />
+            <NavLink label={lang === 'ar' ? 'كيف تعمل الخدمة' : 'How it works'} onClick={() => scrollToSection('how-it-works')} />
             <NavLink target="bride" label={lang === 'ar' ? 'العروسة' : 'Bride'} isHighlight />
             <NavLink target="tracking" label={lang === 'ar' ? 'تتبع طلبك' : 'Tracking'} />
             {user?.isAdmin && <NavLink target="admin" label={lang === 'ar' ? 'الإدارة' : 'Admin'} />}
@@ -258,6 +268,9 @@ const AppContent: React.FC = () => {
               <button onClick={() => { setIsNotifOpen(!isNotifOpen); if (!isNotifOpen) markAsRead(); }} className="p-1 md:p-3 text-white/70 hover:text-white relative transition-colors">
                 <i className="fa-solid fa-bell text-base md:text-2xl"></i>
                 {unreadCount > 0 && <span className="absolute top-0 right-0 md:top-1 md:right-1 bg-[#c4a76d] text-[#1a2b4c] text-[6px] md:text-[10px] font-black w-3 h-3 md:w-5 md:h-5 rounded-full flex items-center justify-center ring-1 ring-[#1a2b4c]">{unreadCount}</span>}
+              </button>
+              <button onClick={() => handleSetView('auth')} className="hidden md:flex p-3 text-white/70 hover:text-white transition-colors">
+                <i className="fa-solid fa-circle-user text-2xl"></i>
               </button>
               
               {isNotifOpen && (
@@ -361,6 +374,8 @@ const AppContent: React.FC = () => {
             <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">روابط سريعة</h4>
             <div className="flex flex-col gap-2 text-[10px] md:text-[12px] font-medium">
               <span onClick={() => setView('catalog')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('allProducts')}</span>
+              <span onClick={() => scrollToSection('about-us')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('aboutUs')}</span>
+              <span onClick={() => scrollToSection('how-it-works')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{lang === 'ar' ? 'كيف تعمل الخدمة' : 'How it works'}</span>
               <span onClick={() => setView('favorites')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{lang === 'ar' ? 'المفضلة' : 'Favorites'}</span>
               <span onClick={() => setView('tracking')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">تتبع طلبك</span>
             </div>

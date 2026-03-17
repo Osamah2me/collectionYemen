@@ -457,9 +457,6 @@ const HomePage: React.FC<Props> = ({ lang, setView }) => {
           <h2 className="text-lg md:text-4xl font-black text-[#1a2b4c] dark:text-white uppercase tracking-tighter">
             {t('howServiceWorks')}
           </h2>
-          <p className="text-[#7a7a7a] text-[10px] md:text-xl font-bold uppercase tracking-widest">
-            {t('howToShopToday')}
-          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 relative">
@@ -490,31 +487,29 @@ const HomePage: React.FC<Props> = ({ lang, setView }) => {
       </section>
 
       {/* Trust & Guarantee Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-        <div className="space-y-10">
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-5xl font-black text-[#1a2b4c] dark:text-white tracking-tighter uppercase">
-              {t('whyOrderWithUs')}
-            </h2>
-            <div className="w-20 h-1.5 bg-[#1a2b4c] rounded-full"></div>
-          </div>
+      <section className="space-y-10 md:space-y-16">
+        <div className="text-center md:text-right space-y-4">
+          <h2 className="text-2xl md:text-5xl font-black text-[#1a2b4c] dark:text-white tracking-tighter uppercase">
+            {t('whyOrderWithUs')}
+          </h2>
+          <div className="w-20 h-1.5 bg-[#1a2b4c] rounded-full mx-auto md:mx-0"></div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { title: t('localPaymentOnDelivery'), icon: 'fa-money-bill-transfer' },
-              { title: t('fullTracking'), icon: 'fa-map-location-dot' },
-              { title: t('directWhatsappSupport'), icon: 'fa-brands fa-whatsapp' },
-              { title: t('fastCustomerService'), icon: 'fa-headset' },
-              { title: t('easyReturn'), icon: 'fa-rotate-left' }
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-5 bg-white dark:bg-slate-900/40 rounded-2xl border border-[#e0e0e0] dark:border-white/5 shadow-sm hover:shadow-md transition-all">
-                <div className="w-12 h-12 bg-[#1a2b4c]/5 rounded-xl flex items-center justify-center text-[#1a2b4c] text-xl">
-                  <i className={`fa-solid ${item.icon}`}></i>
-                </div>
-                <span className="text-sm md:text-lg font-black text-[#1a2b4c] dark:text-slate-200">{item.title}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+          {[
+            { title: t('localPaymentOnDelivery'), icon: 'fa-money-bill-transfer' },
+            { title: t('fullTracking'), icon: 'fa-map-location-dot' },
+            { title: t('directWhatsappSupport'), icon: 'fa-brands fa-whatsapp' },
+            { title: t('fastCustomerService'), icon: 'fa-headset' },
+            { title: t('easyReturn'), icon: 'fa-rotate-left' }
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center md:items-start gap-4 p-6 md:p-8 bg-white dark:bg-slate-900/40 rounded-3xl border border-[#e0e0e0] dark:border-white/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-[#1a2b4c]/5 rounded-2xl flex items-center justify-center text-[#1a2b4c] text-2xl md:text-3xl shadow-inner">
+                <i className={`fa-solid ${item.icon}`}></i>
               </div>
-            ))}
-          </div>
+              <span className="text-sm md:text-xl font-black text-[#1a2b4c] dark:text-slate-200 text-center md:text-right leading-tight">{item.title}</span>
+            </div>
+          ))}
         </div>
       </section>
 
