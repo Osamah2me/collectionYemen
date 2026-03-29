@@ -51,7 +51,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
 
   return (
     <div className="space-y-6 md:space-y-10 pb-24 animate-fade-in max-w-4xl mx-auto">
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <div className="h-6 md:h-10 w-1 md:w-2 bg-[#1a2b4c] rounded-full"></div>
           <h2 className="text-xl md:text-5xl font-black tracking-tighter text-[#1a2b4c] dark:text-white uppercase">{t('cart')}</h2>
@@ -66,7 +66,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
         <span className="text-[8px] md:text-[10px] font-black text-[#7a7a7a] uppercase tracking-[0.2em] md:tracking-[0.3em]">{cart.length} ITEMS</span>
       </div>
       
-      <div className="grid gap-4 md:gap-6 px-2 md:px-0">
+      <div className="grid gap-4 md:gap-6">
         {cart.map(item => (
           <div key={item.id} className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl md:rounded-[3rem] shadow-lg border border-[#e0e0e0] dark:border-white/5 flex flex-col md:flex-row gap-4 md:gap-6 hover:shadow-2xl transition-all group relative overflow-hidden">
             <div className="w-full md:w-40 h-32 md:h-40 shrink-0 overflow-hidden rounded-xl md:rounded-[2.5rem] border border-[#e0e0e0] dark:border-white/10 relative bg-slate-50 dark:bg-slate-950 flex items-center justify-center group-hover:bg-[#1a2b4c]/5 transition-colors">
@@ -163,7 +163,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
       </div>
 
       {/* Checkout Summary Section - Not Fixed anymore */}
-      <div className="mt-8 md:mt-12 bg-[#1a2b4c] p-6 md:p-10 rounded-3xl md:rounded-[3rem] shadow-3xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 mx-2 md:mx-0">
+      <div className="mt-8 md:mt-12 bg-[#1a2b4c] p-6 md:p-10 rounded-3xl md:rounded-[3rem] shadow-3xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
         <div className="flex flex-col items-center md:items-start pl-0 md:pl-8 md:border-l border-white/10 w-full md:w-auto">
           <span className="text-[8px] md:text-[10px] text-white/40 uppercase font-black tracking-[0.2em] mb-1">{t('total')}</span>
           <div className="flex items-baseline gap-2">

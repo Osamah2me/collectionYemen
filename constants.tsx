@@ -18,7 +18,8 @@ export const STORES: Store[] = [
   { id: 'fordeal', name: 'Fordeal', nameAr: 'فورديل', logo: 'https://cdn.worldvectorlogo.com/logos/fordeal.svg', url: 'https://www.fordeal.com/', description: 'Global Shopping', descriptionAr: 'تسوق عالمي شامل' },
 ];
 
-export const APP_LOGO = "./logo.png";
+export const APP_LOGO = "data:image/svg+xml,%3Csvg width='500' height='500' viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='goldGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23d4af37;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23f9f295;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23b8860b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M250 50 L423.2 150 L423.2 350 L250 450 L76.8 350 L76.8 150 Z' fill='none' stroke='url(%23goldGradient)' stroke-width='40' /%3E%3Cpath d='M200 200 L300 200 L300 300 L200 300 Z' fill='url(%23goldGradient)' /%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='180' font-weight='bold' fill='url(%23goldGradient)'%3EC%3C/text%3E%3C/svg%3E";
+// Note: To use your custom logo, upload it as 'logo.png' to the root directory and change APP_LOGO back to "./logo.png"
 
 export const SOCIAL_LINKS = {
   instagram: 'https://www.instagram.com/collection.yem?igsh=MXNla2JmMHI2MWdobQ==',

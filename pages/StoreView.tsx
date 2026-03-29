@@ -61,7 +61,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
   };
 
   return (
-    <div className="flex flex-col gap-8 animate-slide-up pb-24 max-w-4xl mx-auto px-4">
+    <div className="flex flex-col gap-8 animate-slide-up pb-24 max-w-3xl mx-auto">
       {/* Header Navigation */}
       <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 flex items-center justify-between">
         <button onClick={onBack} className="w-10 h-10 md:w-12 md:h-12 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-[#1a2b4c] hover:bg-[#1a2b4c]/10 transition-colors">
@@ -88,7 +88,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
               <img src={store.logo} className="w-full h-full object-contain" alt={store.name} />
            </div>
 
-           <div className="space-y-4 max-w-2xl">
+           <div className="space-y-4 max-w-xl">
               <h3 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
                 {lang === 'en' ? store.name : store.nameAr}
               </h3>
@@ -97,7 +97,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
               </p>
            </div>
 
-           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg pt-6">
+           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md pt-6">
               <button 
                 onClick={() => window.open(store.url, '_blank')} 
                 className="flex-1 bg-white text-[#1a2b4c] py-5 md:py-6 rounded-2xl font-black text-xs md:text-sm uppercase hover:bg-[#f5f1e8] transition-all shadow-xl flex items-center justify-center gap-3"

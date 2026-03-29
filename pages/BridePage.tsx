@@ -107,7 +107,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
   return (
     <div className="animate-fade-in space-y-8 md:space-y-12 pb-20">
       {/* Hero Section */}
-      <div className="relative h-[300px] md:h-[500px] rounded-[2rem] md:rounded-[4rem] overflow-hidden shadow-2xl">
+      <div className="relative h-[250px] md:h-[400px] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl">
         <img 
           src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80" 
           className="w-full h-full object-cover" 
@@ -200,7 +200,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
       {/* Product Detail Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 z-[200] bg-[#1a2b4c]/90 backdrop-blur-lg p-2 md:p-6 animate-fade-in flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-xl md:rounded-2xl shadow-3xl border border-white/5 flex flex-col md:flex-row relative max-h-[95vh] overflow-visible">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-xl md:rounded-2xl shadow-3xl border border-white/5 flex flex-col md:flex-row relative max-h-[95vh] overflow-visible">
             <button 
               onClick={() => setSelectedProduct(null)} 
               className="absolute top-2 right-2 md:top-6 md:right-6 z-50 w-7 h-7 md:w-9 md:h-9 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 transition-colors shadow-lg"

@@ -180,7 +180,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
 
         {/* Product Grid */}
         <div className="flex-1">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 md:gap-4 px-2 md:px-0">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 md:gap-4">
             {filteredProducts.map(product => {
               const favorited = isFavorite(product.id);
               return (
@@ -222,7 +222,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
       {/* Product Detail Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 z-[200] bg-[#1a2b4c]/90 backdrop-blur-lg p-2 md:p-6 animate-fade-in flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-xl md:rounded-2xl shadow-3xl border border-white/5 flex flex-col md:flex-row relative max-h-[95vh] overflow-visible">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-xl md:rounded-2xl shadow-3xl border border-white/5 flex flex-col md:flex-row relative max-h-[95vh] overflow-visible">
             <button 
               onClick={() => setSelectedProduct(null)} 
               className="absolute top-2 right-2 md:top-6 md:right-6 z-50 w-7 h-7 md:w-9 md:h-9 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 transition-colors shadow-lg"
