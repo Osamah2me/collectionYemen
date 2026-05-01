@@ -74,7 +74,7 @@ export const INJECTION_SCRIPT = `
   window.collectionInjected = true;
   const btn = document.createElement('div');
   btn.id = 'collection-floating-btn';
-  btn.innerHTML = '<span>إضافة إلى سلة كوليكشن</span> <i class="fas fa-plus-circle"></i>';
+  btn.innerHTML = '<span>إضافة إلى سلة كوليكشن</span> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
   const styles = {
     position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)',
     zIndex: '999999', background: '#0F172A', color: '#D4AF37', padding: '16px 32px',

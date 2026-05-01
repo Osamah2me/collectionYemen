@@ -12,6 +12,7 @@ import {
   orderBy,
   addDoc
 } from "firebase/firestore";
+import { toast } from "react-hot-toast";
 import { db, storage as firebaseStorageInstance, ref, uploadString, getDownloadURL } from "./firebase";
 import { User, CartItem, Category, LocalProduct, AppNotification } from '../types';
 
@@ -48,13 +49,18 @@ const isFirebaseReady = () => {
   }
 };
 
-const persistToLocal = (key: string, data: any[]) => {
+const persistToLocal = (key: string, data: any) => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
   } catch (e: any) {
+    console.error(`LocalStorage Error for ${key}:`, e.message);
     if (e.name === 'QuotaExceededError') {
-      const reducedData = data.slice(Math.floor(data.length * 0.2));
-      localStorage.setItem(key, JSON.stringify(reducedData));
+      toast.error("Storage limit reached! Please set up Firebase for more space.");
+      // If it's an array, try to keep some data, but for settings (object) we can't really slice
+      if (Array.isArray(data)) {
+        const reducedData = data.slice(Math.floor(data.length * 0.2));
+        localStorage.setItem(key, JSON.stringify(reducedData));
+      }
     }
   }
 };
@@ -288,7 +294,7 @@ export const DB = {
     () => {
       const existing = JSON.parse(localStorage.getItem('collection_settings') || '{}');
       const updated = { ...existing, ...settings };
-      localStorage.setItem('collection_settings', JSON.stringify(updated));
+      persistToLocal('collection_settings', updated);
     }
   )
 };

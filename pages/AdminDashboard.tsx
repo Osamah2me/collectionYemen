@@ -1,6 +1,40 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
+import { 
+  Users, 
+  Package, 
+  TrendingUp, 
+  Trophy, 
+  PieChart, 
+  Search, 
+  Copy, 
+  X, 
+  Phone, 
+  MapPin, 
+  ExternalLink, 
+  Plus, 
+  Tag, 
+  PenSquare, 
+  Trash2, 
+  Upload, 
+  ChevronDown, 
+  Eye, 
+  Save, 
+  Check, 
+  Settings as SettingsIcon, 
+  Store, 
+  Palette, 
+  Maximize, 
+  ShoppingBag,
+  Bell,
+  Languages,
+  LayoutDashboard,
+  LogOut,
+  ChevronRight,
+  ChevronLeft,
+  Gem
+} from 'lucide-react';
 import { Language, PaymentMethod, Category, LocalProduct } from '../types';
 import { TRANSLATIONS, STORES, BRIDE_CATEGORIES } from '../constants';
 import { DB, Order, OrderStatus, AdvancedStats } from '../services/storage';
@@ -24,6 +58,11 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 1024 * 1024) {
+      toast.error(lang === 'ar' ? 'حجم الصورة كبير جداً (الحد الأقصى 1 ميجابايت)' : 'Image size is too large (Max 1MB)');
+      return;
+    }
+
     setIsUploading(true);
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -37,12 +76,22 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
     const file = e.target.files?.[0];
     if (!file || uploadingBannerIdx === null) return;
 
+    if (file.size > 1024 * 1024) {
+      toast.error(lang === 'ar' ? 'حجم الصورة كبير جداً (الحد الأقصى 1 ميجابايت)' : 'Image size is too large (Max 1MB)');
+      return;
+    }
+
     setIsUploading(true);
     const reader = new FileReader();
     reader.onloadend = () => {
-      const newBanners = [...(settings.banners || [])];
-      newBanners[uploadingBannerIdx] = reader.result as string;
-      setSettings({ ...settings, banners: newBanners });
+      const base64 = reader.result as string;
+      if (uploadingBannerIdx === -2) {
+        setSettings({ ...settings, heroImageUrl: base64 });
+      } else {
+        const newBanners = [...(settings.banners || [])];
+        newBanners[uploadingBannerIdx] = base64;
+        setSettings({ ...settings, banners: newBanners });
+      }
       setIsUploading(false);
       setUploadingBannerIdx(null);
     };
@@ -217,13 +266,11 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
 
   const isCategoryValid = !!(
     editingCategory?.name && 
-    isEnglish(editingCategory.name) &&
     editingCategory?.nameAr
   );
   
   const isProductValid = !!(
     editingProduct?.name && 
-    isEnglish(editingProduct.name) &&
     editingProduct?.nameAr &&
     (editingProduct?.isBride ? !!editingProduct?.brideCategoryId : !!editingProduct?.categoryId) && 
     editingProduct?.imageUrl
@@ -236,7 +283,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
       id: editingCategory!.id || Math.random().toString(36).substr(2, 9),
       name: editingCategory!.name!,
       nameAr: editingCategory!.nameAr!,
-      icon: editingCategory!.icon || 'fa-tag',
+      icon: editingCategory!.icon || 'tag',
       isBride: editingCategory!.isBride || false
     };
     await DB.saveCategory(cat);
@@ -328,17 +375,17 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
            {/* Primary Cards */}
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><i className="fa-solid fa-users text-6xl text-[#1a2b4c]"></i></div>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Users size={64} className="text-[#1a2b4c]" /></div>
                 <h4 className="text-[10px] text-[#7a7a7a] dark:text-slate-500 font-black uppercase tracking-[0.2em] mb-2">المستخدمين</h4>
                 <p className="text-4xl font-black text-[#1a2b4c] dark:text-white">{stats.userCount}</p>
               </div>
               <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><i className="fa-solid fa-box text-6xl text-[#1a2b4c]"></i></div>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Package size={64} className="text-[#1a2b4c]" /></div>
                 <h4 className="text-[10px] text-[#7a7a7a] dark:text-slate-500 font-black uppercase tracking-[0.2em] mb-2">الطلبات</h4>
                 <p className="text-4xl font-black text-[#1a2b4c] dark:text-white">{stats.orderCount}</p>
               </div>
               <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><i className="fa-solid fa-chart-line text-6xl text-[#1a2b4c]"></i></div>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp size={64} className="text-[#1a2b4c]" /></div>
                 <h4 className="text-[10px] text-[#7a7a7a] dark:text-slate-500 font-black uppercase tracking-[0.2em] mb-2">متوسط الطلب</h4>
                 <p className="text-3xl font-black text-[#c4a76d]">{stats.avgOrderValue.toFixed(1)} <span className="text-xs uppercase">SAR</span></p>
               </div>
@@ -353,7 +400,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
               <div className="bg-white dark:bg-slate-900 p-8 rounded-[3rem] shadow-xl border border-gray-100 dark:border-white/5">
                 <div className="flex justify-between items-center mb-10">
                   <h4 className="font-black text-gray-900 dark:text-white uppercase text-sm tracking-widest">{lang === 'ar' ? 'المنتجات الأكثر مبيعاً' : 'Top Selling Products'}</h4>
-                  <i className="fa-solid fa-trophy text-[#C5A028] text-xl"></i>
+                  <Trophy size={20} className="text-[#C5A028]" />
                 </div>
                 <div className="space-y-6">
                   {stats.topProducts.map((p, i) => {
@@ -381,7 +428,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
               <div className="bg-white dark:bg-slate-900 p-8 rounded-[3rem] shadow-xl border border-gray-100 dark:border-white/5">
                 <div className="flex justify-between items-center mb-10">
                   <h4 className="font-black text-gray-900 dark:text-white uppercase text-sm tracking-widest">{lang === 'ar' ? 'توزيع المتاجر العالمية' : 'Global Stores Distribution'}</h4>
-                  <i className="fa-solid fa-chart-pie text-blue-500 text-xl"></i>
+                  <PieChart size={20} className="text-blue-500" />
                 </div>
                 <div className="grid gap-4">
                   {stats.storeDistribution.map((s, i) => (
@@ -420,7 +467,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
             </div>
             <div className="bg-blue-50 dark:bg-blue-500/5 p-4 rounded-2xl border border-blue-100 dark:border-blue-500/10">
               <p className="text-[8px] font-black text-blue-600 uppercase tracking-widest mb-1">External Orders</p>
-              <p className="text-xl font-black text-blue-600">{orders.filter(o => o.items.some(i => i.productUrl)).length}</p>
+              <p className="text-xl font-black text-blue-600">{orders.filter(o => o.items.some(i => i.productUrl && !i.productUrl.startsWith('local://'))).length}</p>
             </div>
             <div className="bg-green-50 dark:bg-green-500/5 p-4 rounded-2xl border border-green-100 dark:border-green-500/10">
               <p className="text-[8px] font-black text-green-600 uppercase tracking-widest mb-1">Completed</p>
@@ -431,7 +478,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text" 
                 placeholder={lang === 'ar' ? 'البحث برقم الطلب أو اسم العميل...' : 'Search by order ID or customer name...'}
@@ -467,7 +514,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
               const matchesFilter = 
                 orderFilter === 'all' ? true :
                 orderFilter === 'pricing' ? o.status === 'awaiting_quote' :
-                orderFilter === 'external' ? o.items.some(i => i.productUrl) :
+                orderFilter === 'external' ? o.items.some(i => i.productUrl && !i.productUrl.startsWith('local://')) :
                 orderFilter === 'completed' ? o.status === 'completed' : true;
               return matchesSearch && matchesFilter;
             })
@@ -478,7 +525,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                   {lang === 'ar' ? 'يحتاج تسعير' : 'Needs Pricing'}
                 </div>
               )}
-              {order.items.some(i => i.productUrl) && (
+              {order.items.some(i => i.productUrl && !i.productUrl.startsWith('local://')) && (
                 <div className="absolute top-0 left-0 bg-blue-600 text-white px-4 py-1 text-[8px] font-black uppercase tracking-widest rounded-br-xl shadow-sm z-10">
                   {lang === 'ar' ? 'طلب خارجي' : 'External Order'}
                 </div>
@@ -499,7 +546,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                         }}
                         className="text-slate-400 hover:text-[#c4a76d] transition-colors"
                       >
-                        <i className="fa-solid fa-copy text-[10px]"></i>
+                        <Copy size={12} />
                       </button>
                       {order.status === 'quote_ready' && <span className="text-[8px] bg-green-500 text-white px-2 py-0.5 rounded-full font-black uppercase">Quote Sent</span>}
                     </div>
@@ -514,7 +561,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                             onChange={e => setEditingOrderPrice({...editingOrderPrice, total: Number(e.target.value)})}
                           />
                           <button onClick={handlePriceUpdate} className="bg-[#1a2b4c] text-white px-4 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-[#2a3b5c]">Save</button>
-                          <button onClick={() => setEditingOrderPrice(null)} className="text-slate-400 hover:text-rose-500 transition-colors"><i className="fa-solid fa-times"></i></button>
+                          <button onClick={() => setEditingOrderPrice(null)} className="text-slate-400 hover:text-rose-500 transition-colors"><X size={16} /></button>
                         </div>
                       ) : (
                         <h4 className="font-black text-[#1a2b4c] dark:text-white text-xl flex items-center gap-2">
@@ -545,13 +592,13 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                     <div className="flex flex-col gap-1 bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-100 dark:border-white/5">
                       {order.userPhone && (
                         <div className="flex items-center gap-2 text-[10px] font-bold text-[#1a2b4c] dark:text-[#c4a76d]">
-                          <i className="fa-solid fa-phone w-4"></i>
+                          <Phone size={12} />
                           <span dir="ltr">{order.userPhone}</span>
                         </div>
                       )}
                       {order.userAddress && (
                         <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-slate-400">
-                          <i className="fa-solid fa-location-dot w-4"></i>
+                          <MapPin size={12} />
                           <span>{order.userAddress}</span>
                         </div>
                       )}
@@ -559,9 +606,9 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                   )}
 
                   {/* External Links */}
-                  {order.items.some(i => i.productUrl) && (
+                  {order.items.some(i => i.productUrl && !i.productUrl.startsWith('local://')) && (
                     <div className="flex flex-wrap gap-2">
-                      {order.items.map((item, idx) => item.productUrl && (
+                      {order.items.map((item, idx) => (item.productUrl && !item.productUrl.startsWith('local://')) && (
                         <a 
                           key={idx} 
                           href={item.productUrl} 
@@ -569,7 +616,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           rel="noreferrer" 
                           className="bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase flex items-center gap-2 border border-blue-100 dark:border-blue-500/20 hover:bg-blue-100 transition-all"
                         >
-                          <i className="fa-solid fa-external-link"></i>
+                          <ExternalLink size={10} />
                           {lang === 'ar' ? `رابط المنتج ${idx + 1}` : `Link ${idx + 1}`}
                         </a>
                       ))}
@@ -615,7 +662,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                         <div>
                           <p className="text-[10px] font-black text-slate-900 dark:text-white truncate max-w-[120px]">{item.name}</p>
                           <p className="text-[8px] text-slate-400 font-bold uppercase">{getStoreName(item.storeId || 'unknown')}</p>
-                          {item.productUrl && <a href={item.productUrl} target="_blank" rel="noreferrer" className="text-[8px] text-blue-500 hover:underline">Link</a>}
+                          {item.productUrl && !item.productUrl.startsWith('local://') && <a href={item.productUrl} target="_blank" rel="noreferrer" className="text-[8px] text-blue-500 hover:underline">Link</a>}
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -623,11 +670,11 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           <div className="flex items-center gap-1">
                             <input 
                               type="number" 
-                              disabled={!item.productUrl}
-                              className={`w-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1 rounded text-[10px] font-black ${!item.productUrl ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              disabled={!item.productUrl || item.productUrl.startsWith('local://')}
+                              className={`w-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1 rounded text-[10px] font-black ${(!item.productUrl || item.productUrl.startsWith('local://')) ? 'opacity-50 cursor-not-allowed' : ''}`}
                               value={item.price}
                               onChange={e => {
-                                if (!item.productUrl) return;
+                                if (!item.productUrl || item.productUrl.startsWith('local://')) return;
                                 const newItems = [...tempItems];
                                 newItems[idx] = { ...newItems[idx], price: Number(e.target.value) };
                                 setTempItems(newItems);
@@ -696,7 +743,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
               }}
               className="bg-[#1a2b4c] text-white px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 transition-all flex items-center gap-2"
             >
-              <i className="fa-solid fa-plus"></i>
+              <Plus size={16} />
               {catalogSubTab === 'categories' ? (lang === 'ar' ? 'إضافة قسم' : 'Add Category') : (lang === 'ar' ? 'إضافة منتج' : 'Add Product')}
             </button>
           </div>
@@ -724,7 +771,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                   />
                   <input 
                     type="text" 
-                    placeholder="Icon (fa-tag, fa-gem...)" 
+                    placeholder="Icon (tag, gem...)" 
                     className="w-full bg-[#f9f7f2] dark:bg-slate-950 border border-[#e0e0e0] dark:border-white/10 p-4 rounded-xl text-xs font-bold"
                     value={editingCategory?.icon || ''}
                     onChange={e => setEditingCategory({...editingCategory, icon: e.target.value})}
@@ -748,7 +795,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                     </button>
                     {editingCategory && (
                       <button onClick={() => setEditingCategory(null)} className="px-6 bg-[#f5f1e8] dark:bg-slate-800 text-[#1a2b4c] py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">
-                        <i className="fa-solid fa-times"></i>
+                        <X size={16} />
                       </button>
                     )}
                   </div>
@@ -759,8 +806,8 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                 {categories.map(cat => (
                   <div key={cat.id} className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-[#e0e0e0] dark:border-white/5 flex items-center justify-between group">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-[#c4a76d]/10 rounded-xl flex items-center justify-center text-[#c4a76d] text-xl">
-                        <i className={`fa-solid ${cat.icon}`}></i>
+                      <div className="w-12 h-12 bg-[#c4a76d]/10 rounded-xl flex items-center justify-center text-[#c4a76d]">
+                        {cat.icon === 'gem' ? <Gem size={20} /> : <Tag size={20} />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
@@ -776,7 +823,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => setEditingCategory(cat)} className="w-10 h-10 bg-blue-50 dark:bg-blue-500/10 text-blue-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
-                        <i className="fa-solid fa-pen"></i>
+                        <PenSquare size={16} />
                       </button>
                       <button onClick={async () => { 
                         if(confirm('Delete?')) { 
@@ -785,7 +832,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           fetchData(); 
                         } 
                       }} className="w-10 h-10 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
-                        <i className="fa-solid fa-trash"></i>
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -876,12 +923,12 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                         <>
                           <img src={editingProduct.imageUrl} className="w-full h-full object-cover" alt="Preview" />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <i className="fa-solid fa-camera text-white text-2xl"></i>
+                            <Upload size={24} className="text-white" />
                           </div>
                         </>
                       ) : (
                         <>
-                          <i className="fa-solid fa-cloud-arrow-up text-3xl text-gray-300 mb-2"></i>
+                          <Upload size={32} className="text-gray-300 mb-2" />
                           <p className="text-[10px] font-bold text-gray-400 uppercase">
                             {isUploading ? (lang === 'ar' ? 'جاري الرفع...' : 'Uploading...') : (lang === 'ar' ? 'اضغط لرفع صورة' : 'Click to upload image')}
                           </p>
@@ -972,7 +1019,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                             }}
                             className="text-gray-400 hover:text-red-500"
                           >
-                            <i className="fa-solid fa-times text-[10px]"></i>
+                            <X size={10} />
                           </button>
                         </div>
                       ))}
@@ -1038,7 +1085,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                             }}
                             className="text-gray-400 hover:text-red-500"
                           >
-                            <i className="fa-solid fa-times text-[10px]"></i>
+                            <X size={10} />
                           </button>
                         </div>
                       ))}
@@ -1084,7 +1131,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                     </button>
                     {editingProduct && (
                       <button onClick={() => setEditingProduct(null)} className="px-6 bg-gray-100 dark:bg-slate-800 text-gray-400 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest">
-                        <i className="fa-solid fa-times"></i>
+                        <X size={16} />
                       </button>
                     )}
                   </div>
@@ -1110,7 +1157,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => setEditingProduct(prod)} className="w-10 h-10 bg-blue-50 dark:bg-blue-500/10 text-blue-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
-                        <i className="fa-solid fa-pen"></i>
+                        <PenSquare size={16} />
                       </button>
                       <button onClick={async () => { 
                         if(confirm('Delete?')) { 
@@ -1119,7 +1166,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           fetchData(); 
                         } 
                       }} className="w-10 h-10 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
-                        <i className="fa-solid fa-trash"></i>
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -1134,7 +1181,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
           <div className="bg-white dark:bg-slate-900 p-8 rounded-[3rem] shadow-xl border border-gray-100 dark:border-white/5">
             <div className="flex justify-between items-center mb-10">
               <h4 className="font-black text-gray-900 dark:text-white uppercase text-sm tracking-widest">{lang === 'ar' ? 'إعدادات المتجر العامة' : 'Global Store Settings'}</h4>
-              <i className="fa-solid fa-cog text-[#C5A028] text-xl"></i>
+              <SettingsIcon size={24} className="text-[#C5A028]" />
             </div>
             
             <div className="space-y-6 max-w-2xl">
@@ -1144,7 +1191,18 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                   type="datetime-local" 
                   className="w-full bg-gray-50 dark:bg-slate-950 border border-gray-100 dark:border-white/10 p-4 rounded-xl text-xs font-bold"
                   value={settings.flashSaleEndTime ? new Date(settings.flashSaleEndTime).toISOString().slice(0, 16) : ''}
-                  onChange={e => setSettings({...settings, flashSaleEndTime: new Date(e.target.value).toISOString()})}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (!val) {
+                      setSettings({...settings, flashSaleEndTime: ''});
+                      return;
+                    }
+                    try {
+                      setSettings({...settings, flashSaleEndTime: new Date(val).toISOString()});
+                    } catch (err) {
+                      console.error("Invalid date", err);
+                    }
+                  }}
                 />
                 <p className="text-[9px] text-gray-400 italic">{lang === 'ar' ? 'حدد التاريخ والوقت الذي ينتهي فيه العرض الخاطف في الصفحة الرئيسية.' : 'Set the date and time when the flash sale ends on the home page.'}</p>
               </div>
@@ -1189,6 +1247,39 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                 />
               </div>
 
+              <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-white/5">
+                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{lang === 'ar' ? 'صورة خلفية القسم الرئيسي' : 'Hero Background Image'}</label>
+                <div 
+                  onClick={() => {
+                    setUploadingBannerIdx(-2); // Special index for hero
+                    bannerFileInputRef.current?.click();
+                  }}
+                  className="w-full aspect-[21/9] bg-white dark:bg-slate-900 border-2 border-dashed border-gray-200 dark:border-white/5 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A028] transition-all overflow-hidden relative group"
+                >
+                  {settings.heroImageUrl ? (
+                    <>
+                      <img src={settings.heroImageUrl} className="w-full h-full object-cover" alt="Hero Preview" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-[10px] font-black uppercase">{lang === 'ar' ? 'تغيير الصورة' : 'Change Image'}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center">
+                      <ShoppingBag size={24} className="text-gray-300 mb-2 mx-auto" />
+                      <p className="text-[9px] font-bold text-gray-400 uppercase">{lang === 'ar' ? 'اضغط لرفع صورة الخلفية' : 'Click to upload hero background'}</p>
+                    </div>
+                  )}
+                </div>
+                {settings.heroImageUrl && (
+                  <button 
+                    onClick={() => setSettings({...settings, heroImageUrl: ''})}
+                    className="text-red-500 text-[10px] font-black uppercase hover:underline"
+                  >
+                    {lang === 'ar' ? 'حذف الصورة' : 'Remove Image'}
+                  </button>
+                )}
+              </div>
+
               {/* Banner Management */}
               <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-white/5">
                 <div className="flex justify-between items-center">
@@ -1215,7 +1306,7 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           }}
                           className="text-red-500 hover:text-red-600 transition-colors"
                         >
-                          <i className="fa-solid fa-trash-can text-xs"></i>
+                          <Trash2 size={12} />
                         </button>
                       </div>
                       
@@ -1230,12 +1321,12 @@ const AdminDashboard: React.FC<Props> = ({ lang }) => {
                           <>
                             <img src={url} className="w-full h-full object-cover" alt="Banner Preview" />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                              <i className="fa-solid fa-camera text-white text-xl"></i>
+                              <Upload size={20} className="text-white" />
                             </div>
                           </>
                         ) : (
                           <>
-                            <i className="fa-solid fa-image text-2xl text-gray-300 mb-1"></i>
+                            <ShoppingBag size={24} className="text-gray-300 mb-1" />
                             <p className="text-[8px] font-bold text-gray-400 uppercase">
                               {isUploading && uploadingBannerIdx === idx ? (lang === 'ar' ? 'جاري الرفع...' : 'Uploading...') : (lang === 'ar' ? 'اضغط لرفع صورة' : 'Click to upload')}
                             </p>

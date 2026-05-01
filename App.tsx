@@ -5,6 +5,46 @@ import { FavoritesProvider, useFavorites } from './context/FavoritesContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import { Language } from './types';
 import { Toaster, toast } from 'react-hot-toast';
+import { 
+  MessageCircle, 
+  Send, 
+  ArrowRight, 
+  ArrowLeft, 
+  Globe, 
+  Heart, 
+  ShoppingCart, 
+  Bell, 
+  UserCircle, 
+  X, 
+  Menu, 
+  MapPin, 
+  Phone,
+  Scan,
+  PackageCheck,
+  Sun,
+  Moon
+} from 'lucide-react';
+
+// Custom Brand Icons (Missing in this version of Lucide)
+const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+  </svg>
+);
+
+const Facebook = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+  </svg>
+);
+
+const Twitter = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+  </svg>
+);
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import CartPage from './pages/CartPage';
@@ -16,7 +56,6 @@ import FavoritesPage from './pages/FavoritesPage';
 import TutorialPage from './pages/TutorialPage';
 import BridePage from './pages/BridePage';
 import StoreView from './pages/StoreView';
-import SupportButton from './components/SupportButton';
 import { CustomerReviews } from './components/CustomerReviews';
 import SplashScreen from './components/SplashScreen';
 import { APP_LOGO, TRANSLATIONS, STORES, SOCIAL_LINKS } from './constants';
@@ -27,9 +66,15 @@ import { DB, Order } from './services/storage';
 const AppContent: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('collection_theme') as 'light' | 'dark') || 'light';
+    try {
+      const saved = localStorage.getItem('collection_theme');
+      if (saved) return saved as 'light' | 'dark';
+    } catch (e) {
+      console.warn('LocalStorage not available');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
-  const [view, setView] = useState<'home' | 'auth' | 'cart' | 'checkout' | 'tracking' | 'admin' | 'catalog' | 'favorites' | 'tutorial' | 'store' | 'bride' | 'sale'>('home');
+  const [view, setView] = useState<'home' | 'auth' | 'cart' | 'checkout' | 'tracking' | 'admin' | 'catalog' | 'favorites' | 'tutorial' | 'store' | 'bride' | 'sale' | 'offers' | 'flash-sale'>('home');
   const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,8 +127,9 @@ const AppContent: React.FC = () => {
 
   const submitOrder = async () => {
     setTriedSubmitting(true);
-    if (!orderForm.name || !orderForm.phone || !orderForm.address) {
-      toast.error(lang === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill all required fields');
+    const phoneRegex = /^(77|73|71|70)\d{7}$/;
+    if (!orderForm.phone || !phoneRegex.test(orderForm.phone)) {
+      toast.error(lang === 'ar' ? 'يرجى إدخال رقم هاتف يمني صحيح (9 أرقام تبدأ بـ 77، 73، 71، أو 70)' : 'Please enter a valid Yemeni phone number (9 digits starting with 77, 73, 71, or 70)');
       return;
     }
 
@@ -135,14 +181,34 @@ const AppContent: React.FC = () => {
       }
     };
     window.addEventListener('popstate', handlePopState);
+
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setTheme(e.matches ? 'dark' : 'light');
+    };
+    
+    // Set initial theme based on system
+    handleThemeChange(mediaQuery);
+    
+    // Add listener for real-time changes
+    mediaQuery.addEventListener('change', handleThemeChange);
+
     if (!window.history.state) {
       window.history.replaceState({ view: 'home' }, '', '');
     }
-    return () => window.removeEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      mediaQuery.removeEventListener('change', handleThemeChange);
+    };
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('collection_theme', theme);
+    try {
+      localStorage.setItem('collection_theme', theme);
+    } catch (e) {
+      // Handle private mode or full storage
+    }
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -222,23 +288,35 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col min-h-screen transition-colors duration-500 ${theme === 'dark' ? 'bg-[#020617] text-slate-100' : 'bg-[#f5f1e8] text-[#1a2b4c]'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`flex flex-col min-h-screen min-h-[100dvh] transition-colors duration-500 ${theme === 'dark' ? 'bg-[#020617] text-slate-100' : 'bg-[#f5f1e8] text-[#1a2b4c]'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {showSplash && <SplashScreen />}
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster 
+        position="top-center" 
+        reverseOrder={false} 
+        toastOptions={{
+          style: theme === 'dark' ? {
+            background: '#0f172a',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)'
+          } : undefined
+        }}
+      />
       
-      <div className="bg-[#f5f1e8] text-[#1a2b4c] py-1.5 md:py-2 px-2 md:px-12 flex items-center justify-between text-[8px] md:text-[12px] font-black uppercase tracking-wider border-b border-[#1a2b4c]/10">
-        <div className="hidden md:flex items-center gap-4">
-          {Object.entries(SOCIAL_LINKS).slice(0, 2).map(([key, url]) => (
-            <a key={key} href={url} target="_blank" className="hover:text-[#c4a76d] transition-colors">
-              <i className={`fa-brands fa-${key === 'x' ? 'x-twitter' : key}`}></i>
-            </a>
-          ))}
-        </div>
-        <div className="flex-1 text-center px-2 truncate">
-          {lang === 'ar' ? (settings.topBarAr || t('siteIdentity')) : (settings.topBarEn || t('siteIdentity'))}
-        </div>
-        <div className="flex items-center justify-end gap-3 md:gap-6">
-          {/* Language and Theme toggles removed as per user request */}
+      <div className="bg-[#f5f1e8] dark:bg-[#0f172a] text-[#1a2b4c] dark:text-white py-1.5 md:py-2 px-2 md:px-12 border-b border-[#1a2b4c]/10 dark:border-white/10 transition-colors">
+        <div className="container mx-auto flex items-center justify-between gap-4">
+          <div className="hidden md:block w-32"></div>
+          <div className="flex-1 text-center text-[8px] md:text-[12px] font-black uppercase tracking-wider truncate">
+            {lang === 'ar' ? (settings.topBarAr || t('siteIdentity')) : (settings.topBarEn || t('siteIdentity'))}
+          </div>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')} 
+              className="flex items-center gap-1.5 text-[#1a2b4c] dark:text-white hover:text-[#c4a76d] transition-colors font-black text-[8px] md:text-[10px] uppercase tracking-widest px-2 py-0.5"
+            >
+              {theme === 'light' ? <Moon size={12} /> : <Sun size={12} />}
+              <span className="hidden sm:inline">{theme === 'light' ? t('darkMode') : t('lightMode')}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -247,69 +325,71 @@ const AppContent: React.FC = () => {
           <div className="flex items-center gap-2 md:gap-4">
             {view !== 'home' && (
               <button onClick={handleBack} className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-white hover:text-white/70 transition-all">
-                <i className={`fa-solid ${isRTL ? 'fa-arrow-right' : 'fa-arrow-left'} text-xs md:text-sm`}></i>
+                {isRTL ? <ArrowRight size={18} /> : <ArrowLeft size={18} />}
               </button>
             )}
-            <div className="flex items-center gap-2 md:gap-3 cursor-pointer group shrink-0" onClick={() => handleSetView('home')}>
-              <div className="w-6 h-6 md:w-10 md:h-10 flex items-center justify-center p-1 transition-all group-hover:scale-110">
+            <div className="flex items-center gap-2 md:gap-4 cursor-pointer group shrink-0" onClick={() => handleSetView('home')}>
+              <div className="w-12 h-12 md:w-20 md:h-20 flex items-center justify-center p-1 transition-all group-hover:scale-110">
                 <img src={APP_LOGO} alt="Logo" className="w-full h-full object-contain drop-shadow-[0_2px_5px_rgba(255,255,255,0.3)]" onError={(e) => { (e.target as HTMLImageElement).src = "https://img.icons8.com/ios-filled/100/ffffff/crown.png"; }} />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] md:text-xl lg:text-2xl font-black tracking-tighter text-white leading-none uppercase">{t('welcome')}</span>
-                <span className="hidden sm:block text-[6px] md:text-[8px] text-white/60 font-bold uppercase tracking-[0.2em] mt-0.5">Unified Global Logistics</span>
+                <span className="text-lg md:text-xl xl:text-3xl font-black tracking-tighter text-white leading-none uppercase">{t('welcome')}</span>
               </div>
             </div>
           </div>
 
-          <nav className="hidden xl:flex items-center gap-6 lg:gap-8">
-            <NavLink target="home" label={lang === 'ar' ? 'الرئيسية' : 'Home'} />
-            <NavLink target="catalog" label={lang === 'ar' ? 'المتجر' : 'Shop'} />
-            <NavLink label={lang === 'ar' ? 'من نحن' : 'About Us'} onClick={() => scrollToSection('about-us')} />
-            <NavLink label={lang === 'ar' ? 'كيف تعمل الخدمة' : 'How it works'} onClick={() => scrollToSection('how-it-works')} />
-            <NavLink target="bride" label={lang === 'ar' ? 'العروسة' : 'Bride'} isHighlight />
-            <NavLink target="tracking" label={lang === 'ar' ? 'تتبع طلبك' : 'Tracking'} />
-            {user?.isAdmin && <NavLink target="admin" label={lang === 'ar' ? 'الإدارة' : 'Admin'} />}
+          <nav className="hidden lg:flex items-center gap-3 xl:gap-8">
+            <NavLink target="home" label={t('home')} />
+            <NavLink target="catalog" label={t('shop')} />
+            <NavLink target="offers" label={t('offers')} />
+            <NavLink label={t('aboutUs')} onClick={() => scrollToSection('about-us')} />
+            <NavLink label={t('howServiceWorks')} onClick={() => scrollToSection('how-it-works')} />
+            <NavLink target="bride" label={t('bride')} isHighlight />
+            <NavLink target="tracking" label={t('tracking')} />
+            {user?.isAdmin && <NavLink target="admin" label={t('admin')} />}
           </nav>
 
-          <div className="flex items-center gap-1 md:gap-6">
-            <div className="flex items-center gap-0.5 md:gap-4">
-              <button onClick={() => setLang(l => l === 'en' ? 'ar' : 'en')} className="p-1 md:p-3 text-white/70 hover:text-white transition-colors flex items-center gap-1">
-                <i className="fa-solid fa-globe text-base md:text-xl"></i>
-                <span className="hidden sm:inline text-[10px] font-black">{lang === 'ar' ? 'EN' : 'AR'}</span>
+          <div className="flex items-center gap-1 md:gap-2 xl:gap-4">
+            <div className="flex items-center gap-1 md:gap-2">
+              <button 
+                onClick={() => setLang(l => l === 'en' ? 'ar' : 'en')} 
+                className="w-8 h-8 md:w-12 md:h-12 text-white/70 hover:text-white transition-colors flex items-center justify-center shrink-0"
+                title={lang === 'ar' ? 'English' : 'العربية'}
+              >
+                <Globe size={20} />
               </button>
-              <button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')} className="p-1 md:p-3 text-white/70 hover:text-white transition-colors flex items-center gap-1">
-                <i className={`fa-solid ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-base md:text-xl`}></i>
-                <span className="hidden sm:inline text-[10px] font-black">{theme === 'light' ? (lang === 'ar' ? 'ليلي' : 'Dark') : (lang === 'ar' ? 'نهاري' : 'Light')}</span>
+              <button onClick={() => handleSetView('favorites')} className="w-8 h-8 md:w-12 md:h-12 text-white/70 hover:text-white transition-colors flex items-center justify-center shrink-0">
+                <Heart size={20} />
               </button>
-              <button onClick={() => setView('cart')} className="p-1 md:p-3 text-white/70 hover:text-white relative transition-colors">
-                <i className="fa-solid fa-cart-shopping text-base md:text-2xl"></i>
+              <button onClick={() => setView('cart')} className="w-8 h-8 md:w-12 md:h-12 text-white/70 hover:text-white relative transition-colors flex items-center justify-center shrink-0">
+                <ShoppingCart size={20} />
                 {cart.length > 0 && <span className="absolute top-0 right-0 md:top-1 md:right-1 bg-rose-500 text-white text-[6px] md:text-[10px] font-black w-3 h-3 md:w-5 md:h-5 rounded-full flex items-center justify-center ring-1 ring-[#1a2b4c]">{cart.length}</span>}
               </button>
-              <button onClick={() => { setIsNotifOpen(!isNotifOpen); if (!isNotifOpen) markAsRead(); }} className="p-1 md:p-3 text-white/70 hover:text-white relative transition-colors">
-                <i className="fa-solid fa-bell text-base md:text-2xl"></i>
+              <button onClick={() => { setIsNotifOpen(!isNotifOpen); if (!isNotifOpen) markAsRead(); }} className="hidden md:flex w-8 h-8 md:w-12 md:h-12 text-white/70 hover:text-white relative transition-colors items-center justify-center shrink-0">
+                <Bell size={20} />
                 {unreadCount > 0 && <span className="absolute top-0 right-0 md:top-1 md:right-1 bg-[#c4a76d] text-[#1a2b4c] text-[6px] md:text-[10px] font-black w-3 h-3 md:w-5 md:h-5 rounded-full flex items-center justify-center ring-1 ring-[#1a2b4c]">{unreadCount}</span>}
               </button>
-              <button onClick={() => handleSetView('auth')} className="hidden md:flex p-3 text-white/70 hover:text-white transition-colors">
-                <i className="fa-solid fa-circle-user text-2xl"></i>
+              <button onClick={() => handleSetView('auth')} className="hidden md:flex w-12 h-12 text-white/70 hover:text-white transition-colors items-center justify-center">
+                <UserCircle size={24} />
               </button>
               
               {isNotifOpen && (
                 <div className="absolute top-full mt-2 right-0 md:right-12 w-72 md:w-80 bg-white dark:bg-slate-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-slide-up z-[500]">
                   <div className="p-4 bg-[#1a2b4c] border-b border-white/10 flex justify-between items-center">
-                    <h5 className="text-[10px] font-black uppercase tracking-widest text-white">{lang === 'en' ? 'Notifications' : 'الإشعارات'}</h5>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-white/60 hover:text-white"><i className="fa-solid fa-times"></i></button>
+                    <h5 className="text-[10px] font-black uppercase tracking-widest text-white">{t('notifications')}</h5>
+                    <button onClick={() => setIsNotifOpen(false)} className="text-white/60 hover:text-white"><X size={16} /></button>
                   </div>
                   <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
                     {notifications.length === 0 ? (
                       <div className="p-8 text-center text-slate-400 text-[10px] font-bold uppercase">
-                        {lang === 'en' ? 'No Notifications' : 'لا توجد إشعارات'}
+                        {t('noNotifications')}
                       </div>
                     ) : (
                       notifications.map(n => (
                         <div key={n.id} className={`p-4 border-b border-slate-50 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors ${!n.isRead ? 'bg-[#c4a76d]/5' : ''}`}>
                           <div className="flex gap-3">
                              <div className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center ${n.type === 'order' ? 'bg-green-500/10 text-green-500' : 'bg-[#c4a76d]/10 text-[#c4a76d]'}`}>
-                                <i className={`fa-solid ${n.type === 'order' ? 'fa-box-check' : 'fa-bell'} text-xs`}></i>
+                                {n.type === 'order' ? <PackageCheck size={14} /> : <Bell size={14} />}
                              </div>
                              <div className="space-y-1">
                                 <h6 className="text-[11px] font-black text-slate-900 dark:text-white leading-tight">{lang === 'en' ? n.title : n.titleAr}</h6>
@@ -324,8 +404,8 @@ const AppContent: React.FC = () => {
                 </div>
               )}
             </div>
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="xl:hidden p-1 text-white hover:bg-white/10 rounded-lg transition-all">
-              <i className={`fa-solid ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-base md:text-2xl`}></i>
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden w-8 h-8 md:w-12 md:h-12 text-white hover:bg-white/10 rounded-lg transition-all flex items-center justify-center shrink-0">
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -333,27 +413,31 @@ const AppContent: React.FC = () => {
         {/* Mobile Sidebar Menu (Solid Color Sidebar, Transparent Overlay) */}
         <div className={`fixed inset-0 z-[200] transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
           <div className="absolute inset-0 bg-transparent" onClick={() => setIsMenuOpen(false)}></div>
-          <div className={`absolute top-0 bottom-0 w-1/2 bg-[#1a2b4c] border-x border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isRTL ? 'left-0' : 'right-0'} ${isMenuOpen ? 'translate-x-0' : (isRTL ? '-translate-x-full' : 'translate-x-full')}`}>
+          <div className={`absolute top-0 bottom-0 w-[280px] sm:w-[320px] bg-[#1a2b4c] border-x border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${isRTL ? 'left-0' : 'right-0'} ${isMenuOpen ? 'translate-x-0' : (isRTL ? '-translate-x-full' : 'translate-x-full')}`}>
             <div className="p-4 flex items-center justify-between border-b border-white/10">
               <div className="flex items-center gap-2">
-                <img src={APP_LOGO} alt="Logo" className="w-6 h-6 object-contain" />
-                <span className="text-white font-black text-sm uppercase tracking-wider">Collection</span>
+                <img src={APP_LOGO} alt="Logo" className="w-8 h-8 object-contain" />
+                <span className="text-white font-black text-xs uppercase tracking-wider">Collection</span>
               </div>
               <button onClick={() => setIsMenuOpen(false)} className="text-white hover:text-white/70 transition-colors p-1">
-                <i className="fa-solid fa-times text-xl"></i>
+                <X size={20} />
               </button>
             </div>
             <div className="flex-1 py-2 flex flex-col overflow-y-auto">
               {[
-                { id: 'home', label: lang === 'ar' ? 'الرئيسية' : 'Home' },
-                { id: 'catalog', label: lang === 'ar' ? 'المنتجات' : 'Products' },
-                { id: 'bride', label: lang === 'ar' ? 'العروسة' : 'Bride' },
-                { id: 'tracking', label: lang === 'ar' ? 'تتبع الطلب' : 'Order Tracking' },
-                { id: 'favorites', label: lang === 'ar' ? 'المفضلة' : 'Favorites' },
-                { id: 'about-us', label: lang === 'ar' ? 'من نحن' : 'About Us', action: () => { handleSetView('home'); setTimeout(() => document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
-                { id: 'how-it-works', label: lang === 'ar' ? 'كيف تعمل الخدمة' : 'How it works', action: () => { handleSetView('home'); setTimeout(() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
-                { id: 'auth', label: lang === 'ar' ? 'حسابي' : 'Account' },
-                ...(user?.isAdmin ? [{ id: 'admin', label: lang === 'ar' ? 'الإدارة' : 'Admin' }] : []),
+                { id: 'home', label: t('home') },
+                { id: 'catalog', label: t('shop') },
+                { id: 'offers', label: t('offers') },
+                { id: 'bride', label: t('bride') },
+                { id: 'tracking', label: t('tracking') },
+                { id: 'favorites', label: t('favorites') },
+                { id: 'notifications', label: t('notifications'), action: () => { setIsNotifOpen(true); setIsMenuOpen(false); } },
+                { id: 'about-us', label: t('aboutUs'), action: () => { handleSetView('home'); setTimeout(() => document.getElementById('about-us')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
+                { id: 'how-it-works', label: t('howServiceWorks'), action: () => { handleSetView('home'); setTimeout(() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
+                { id: 'auth', label: t('account') },
+                { id: 'theme', label: theme === 'light' ? t('darkMode') : t('lightMode'), action: () => setTheme(t => t === 'light' ? 'dark' : 'light') },
+                { id: 'language', label: lang === 'ar' ? 'English' : 'العربية', action: () => setLang(l => l === 'en' ? 'ar' : 'en') },
+                ...(user?.isAdmin ? [{ id: 'admin', label: t('admin') }] : []),
               ].map((item) => (
                 <button key={item.id} onClick={() => { if (item.action) { item.action(); } else { handleSetView(item.id as any); } setIsMenuOpen(false); }} className="w-full py-3.5 px-5 text-start text-white hover:bg-white/5 transition-all border-b border-white/5 flex items-center gap-3">
                   <span className="text-[13px] font-medium uppercase tracking-wide">{item.label}</span>
@@ -379,35 +463,38 @@ const AppContent: React.FC = () => {
               <span className="text-lg md:text-2xl font-black text-white tracking-tighter uppercase">{t('welcome')}</span>
             </div>
             <p className="text-[10px] md:text-[12px] leading-relaxed max-w-xs opacity-70">{t('heroDesc')}</p>
-            <div className="flex gap-3">
-              {Object.entries(SOCIAL_LINKS).map(([key, url]) => (
-                <a key={key} href={url} target="_blank" className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center rounded-full bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all text-base md:text-lg">
-                  <i className={`fa-brands fa-${key === 'x' ? 'x-twitter' : key}`}></i>
+            <div className="flex justify-center md:justify-start gap-2.5">
+              {Object.entries(SOCIAL_LINKS).filter(([key, url]) => !!url && !!key && key !== 'x' && key !== 'twitter').map(([key, url]) => (
+                <a key={key} href={url} target="_blank" className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-lg bg-white/5 text-white/60 hover:text-white hover:bg-[#c4a76d] transition-all shadow-sm">
+                  {key === 'instagram' && <Instagram size={12} />}
+                  {key === 'facebook' && <Facebook size={12} />}
+                  {key === 'whatsapp' && <MessageCircle size={12} />}
+                  {key === 'telegram' && <Send size={12} />}
                 </a>
               ))}
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">روابط سريعة</h4>
+            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">{t('quickLinks')}</h4>
             <div className="flex flex-col gap-2 text-[10px] md:text-[12px] font-medium">
               <span onClick={() => setView('catalog')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('allProducts')}</span>
               <span onClick={() => scrollToSection('about-us')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('aboutUs')}</span>
-              <span onClick={() => scrollToSection('how-it-works')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{lang === 'ar' ? 'كيف تعمل الخدمة' : 'How it works'}</span>
-              <span onClick={() => setView('favorites')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{lang === 'ar' ? 'المفضلة' : 'Favorites'}</span>
-              <span onClick={() => setView('tracking')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">تتبع طلبك</span>
+              <span onClick={() => scrollToSection('how-it-works')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('howServiceWorks')}</span>
+              <span onClick={() => setView('favorites')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('favorites')}</span>
+              <span onClick={() => setView('tracking')} className="hover:text-[#c4a76d] cursor-pointer transition-colors">{t('trackOrder')}</span>
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">المتاجر المدعومة</h4>
-            <div className="grid grid-cols-2 gap-1.5 text-[9px] font-medium opacity-80">
-              {STORES.slice(0, 8).map(store => <a key={store.id} href={store.url} target="_blank" className="hover:text-[#c4a76d] transition-all">{lang === 'ar' ? store.nameAr : store.name}</a>)}
+            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">{t('supportedStores')}</h4>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[9px] font-medium opacity-80">
+              {STORES.slice(0, 8).map(store => <a key={store.id} href={store.url} target="_blank" className="hover:text-[#c4a76d] transition-all truncate">{lang === 'ar' ? store.nameAr : store.name}</a>)}
             </div>
           </div>
           <div className="space-y-3">
-            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">تواصل معنا</h4>
+            <h4 className="text-white font-black text-[10px] md:text-[11px] uppercase tracking-widest">{t('contactUs')}</h4>
             <div className="flex flex-col gap-2 text-[10px] md:text-[12px] font-medium items-center md:items-start">
-              <div className="flex items-center gap-2"><i className="fa-solid fa-location-dot text-[#c4a76d] text-xs"></i> <span>اليمن - إب</span></div>
-              <div className="flex items-center gap-2" dir="ltr"><i className="fa-solid fa-phone text-[#c4a76d] text-xs"></i> <span>+967 774757728</span></div>
+              <div className="flex items-center gap-2"><MapPin size={12} className="text-[#c4a76d]" /> <span>{t('location')}</span></div>
+              <div className="flex items-center gap-2" dir="ltr"><Phone size={12} className="text-[#c4a76d]" /> <span>+967 774757728</span></div>
             </div>
           </div>
         </div>
@@ -426,10 +513,10 @@ const AppContent: React.FC = () => {
                 onClick={() => setShowOrderForm(false)}
                 className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
               >
-                <i className="fa-solid fa-times text-xl"></i>
+                <X size={20} />
               </button>
               <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fa-solid fa-file-signature text-3xl text-[#c4a76d]"></i>
+                <Scan size={30} className="text-[#c4a76d]" />
               </div>
               <h3 className="text-xl font-black text-white uppercase tracking-widest">
                 {lang === 'ar' ? 'تأكيد بيانات الطلب' : 'Confirm Order Details'}
@@ -445,7 +532,7 @@ const AppContent: React.FC = () => {
                   {lang === 'ar' ? 'الاسم الكامل' : 'Full Name'} <span className={triedSubmitting && !orderForm.name ? 'text-rose-500' : 'text-rose-400'}>*</span>
                 </label>
                 <div className="relative">
-                  <i className={`fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${triedSubmitting && !orderForm.name ? 'text-rose-300' : 'text-slate-300'}`}></i>
+                  <UserCircle size={18} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${triedSubmitting && !orderForm.name ? 'text-rose-300' : 'text-slate-300'}`} />
                   <input 
                     type="text"
                     value={orderForm.name}
@@ -461,7 +548,7 @@ const AppContent: React.FC = () => {
                   {lang === 'ar' ? 'رقم الهاتف' : 'Phone Number'} <span className={triedSubmitting && !orderForm.phone ? 'text-rose-500' : 'text-rose-400'}>*</span>
                 </label>
                 <div className="relative">
-                  <i className={`fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${triedSubmitting && !orderForm.phone ? 'text-rose-300' : 'text-slate-300'}`}></i>
+                  <Phone size={18} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${triedSubmitting && !orderForm.phone ? 'text-rose-300' : 'text-slate-300'}`} />
                   <input 
                     type="tel"
                     value={orderForm.phone}
@@ -478,7 +565,7 @@ const AppContent: React.FC = () => {
                   {lang === 'ar' ? 'العنوان بالتفصيل' : 'Detailed Address'} <span className={triedSubmitting && !orderForm.address ? 'text-rose-500' : 'text-rose-400'}>*</span>
                 </label>
                 <div className="relative">
-                  <i className={`fa-solid fa-location-dot absolute left-4 top-4 transition-colors ${triedSubmitting && !orderForm.address ? 'text-rose-300' : 'text-slate-300'}`}></i>
+                  <MapPin size={18} className={`absolute left-4 top-4 transition-colors ${triedSubmitting && !orderForm.address ? 'text-rose-300' : 'text-slate-300'}`} />
                   <textarea 
                     value={orderForm.address}
                     onChange={(e) => setOrderForm({...orderForm, address: e.target.value})}
@@ -498,7 +585,7 @@ const AppContent: React.FC = () => {
                 ) : (
                   <>
                     {lang === 'ar' ? 'تأكيد وإرسال الطلب' : 'Confirm & Send Order'}
-                    <i className="fa-solid fa-paper-plane"></i>
+                    <Send size={16} />
                   </>
                 )}
               </button>

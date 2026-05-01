@@ -4,6 +4,17 @@ import { toast } from 'react-hot-toast';
 import { Language } from '../types';
 import { useCart } from '../context/CartContext';
 import { TRANSLATIONS } from '../constants';
+import { 
+  ShoppingCart, 
+  RotateCcw, 
+  Trash2, 
+  Minus, 
+  Plus, 
+  FileText, 
+  CreditCard, 
+  ReceiptText,
+  Loader2
+} from 'lucide-react';
 
 interface Props {
   lang: Language;
@@ -39,7 +50,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
     return (
       <div className="text-center py-32 bg-white dark:bg-slate-900 rounded-[4rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 animate-fade-in flex flex-col items-center gap-8">
         <div className="w-32 h-32 bg-slate-50 dark:bg-slate-950 rounded-full flex items-center justify-center shadow-inner">
-          <i className="fa-solid fa-cart-shopping text-5xl text-slate-200 dark:text-white/5 animate-pulse"></i>
+          <ShoppingCart size={48} className="text-slate-200 dark:text-white/5 animate-pulse" />
         </div>
         <div className="space-y-2">
           <h2 className="text-2xl font-black text-[#7a7a7a] uppercase tracking-widest">{t('emptyCart')}</h2>
@@ -60,7 +71,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
             className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 hover:text-[#1a2b4c] transition-all active:rotate-180 duration-500"
             title={lang === 'en' ? 'Refresh Prices' : 'تحديث الأسعار'}
           >
-            <i className="fa-solid fa-rotate text-[10px] md:text-sm"></i>
+            <RotateCcw size={14} className="md:w-4 md:h-4" />
           </button>
         </div>
         <span className="text-[8px] md:text-[10px] font-black text-[#7a7a7a] uppercase tracking-[0.2em] md:tracking-[0.3em]">{cart.length} ITEMS</span>
@@ -136,7 +147,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
                 }} 
                 className="w-8 h-8 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-md active:scale-90"
               >
-                <i className="fa-solid fa-trash-can text-xs md:text-lg"></i>
+                <Trash2 size={16} className="md:w-5 md:h-5" />
               </button>
               
               <div className="flex items-center bg-slate-50 dark:bg-black/40 rounded-xl md:rounded-2xl border border-[#e0e0e0] dark:border-white/10 overflow-hidden shadow-inner">
@@ -144,7 +155,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
                    onClick={() => updateCartItem(item.id, { quantity: Math.max(1, item.quantity - 1) })}
                    className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-slate-400 hover:text-[#1a2b4c] hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
                  >
-                   <i className="fa-solid fa-minus text-[8px] md:text-[10px]"></i>
+                   <Minus size={10} className="md:w-3 md:h-3" />
                  </button>
                  <div className="px-2 md:px-4 flex flex-col items-center">
                     <span className="text-[6px] md:text-[8px] text-[#7a7a7a] font-black uppercase tracking-tighter">{lang === 'ar' ? 'الكمية' : 'Qty'}</span>
@@ -154,7 +165,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
                    onClick={() => updateCartItem(item.id, { quantity: item.quantity + 1 })}
                    className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center text-slate-400 hover:text-[#1a2b4c] hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
                  >
-                   <i className="fa-solid fa-plus text-[8px] md:text-[10px]"></i>
+                   <Plus size={10} className="md:w-3 md:h-3" />
                  </button>
               </div>
             </div>
@@ -191,7 +202,7 @@ const CartPage: React.FC<Props> = ({ lang, onCheckout, onRequestQuote }) => {
           className={`w-full md:flex-1 py-4 md:py-6 rounded-xl md:rounded-[2.5rem] font-black text-sm md:text-xl hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-2 md:gap-3 shadow-2xl uppercase tracking-widest group disabled:opacity-50 disabled:scale-100 ${needsPricing ? 'bg-rose-500 text-white shadow-rose-500/25' : 'bg-[#c4a76d] text-[#1a2b4c] shadow-[#c4a76d]/25'}`}
         >
           {isAwaiting && needsPricing ? (lang === 'ar' ? 'جاري مراجعة طلبك...' : 'Reviewing Request...') : (needsPricing ? t('requestQuote') : t('checkout'))}
-          <i className={`fa-solid ${needsPricing ? 'fa-file-invoice-dollar' : (lang === 'en' ? 'fa-credit-card' : 'fa-receipt')} text-sm md:text-2xl group-hover:rotate-12 transition-transform`}></i>
+          {needsPricing ? <FileText size={24} className="group-hover:rotate-12 transition-transform" /> : (lang === 'en' ? <CreditCard size={24} className="group-hover:rotate-12 transition-transform" /> : <ReceiptText size={24} className="group-hover:rotate-12 transition-transform" />)}
         </button>
       </div>
     </div>

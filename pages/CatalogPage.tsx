@@ -7,6 +7,32 @@ import { DB } from '../services/storage';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
+import { 
+  Search, 
+  Heart, 
+  ShoppingCart, 
+  PackageOpen, 
+  X, 
+  Check, 
+  Share2, 
+  MessageCircle, 
+  Send, 
+  Copy 
+} from 'lucide-react';
+
+const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+  </svg>
+);
+
+const Facebook = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+  </svg>
+);
 
 interface Props { 
   lang: Language; 
@@ -117,7 +143,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
     return (
       <div className="flex flex-col items-center justify-center py-24 md:py-60 gap-4 md:gap-6 text-center">
         <div className="w-10 h-10 md:w-16 md:h-16 border-[4px] md:border-[6px] border-[#1a2b4c] border-t-transparent rounded-full animate-spin"></div>
-        <p className="font-black text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px]">Accessing Store...</p>
+        <p className="font-black text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px]">{t('accessingStore')}</p>
       </div>
     );
   }
@@ -130,24 +156,24 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
           <div className="text-center md:text-right">
             <h2 className="text-xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none">
-              {showOnlyFlashSale ? (lang === 'ar' ? 'عروض خاطفة' : 'Flash Sale') : 
-               showOnlyOffers ? (lang === 'ar' ? 'عروض خاصة' : 'Special Offers') : 
+              {showOnlyFlashSale ? t('flashSaleTitle') : 
+               showOnlyOffers ? t('specialOffersTitle') : 
                showOnlyDiscounted ? t('flashSale') : t('localStore')}
             </h2>
             <p className="text-white/60 text-[8px] md:text-lg font-bold uppercase tracking-widest mt-1 md:mt-2">
-              {showOnlyDiscounted ? t('flashSaleSubtitle') : (lang === 'ar' ? 'مجموعات حصرية تم اختيارها لك.' : 'Curated collections for your style.')}
+              {showOnlyDiscounted ? t('flashSaleSubtitle') : t('catalogSubtitle')}
             </p>
           </div>
           <div className="w-full md:w-auto">
             <div className="relative">
               <input 
                 type="text"
-                placeholder={lang === 'en' ? "Search..." : "بحث..."}
+                placeholder={t('search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full md:w-80 bg-white/10 border border-white/20 rounded-lg md:rounded-[1.5rem] py-2.5 md:py-5 px-10 md:px-12 text-white outline-none focus:border-[#c4a76d] transition-all font-bold text-[10px] md:text-sm"
               />
-              <i className="fa-solid fa-search absolute left-4 md:left-5 top-1/2 -translate-y-1/2 text-white/40 text-[10px] md:text-sm"></i>
+              <Search size={14} className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 text-white/40 md:w-5 md:h-5" />
             </div>
           </div>
         </div>
@@ -157,7 +183,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
         {/* Categories Sidebar */}
         <aside className="w-full lg:w-64 shrink-0 space-y-4 md:space-y-6">
           <h3 className="hidden lg:block font-black text-slate-900 dark:text-white uppercase tracking-widest text-[11px] px-3 opacity-50">
-            {lang === 'ar' ? 'الأقسام' : 'Collections'}
+            {t('collections')}
           </h3>
           <div className="flex lg:flex-col gap-2 md:gap-3 overflow-x-auto no-scrollbar pb-2 lg:pb-0 px-2 lg:px-0">
             <button 
@@ -186,7 +212,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
               return (
                 <div key={product.id} className="bg-white dark:bg-slate-900 p-1 md:p-2 rounded-lg md:rounded-2xl border border-[#e0e0e0] dark:border-white/5 shadow-sm hover:shadow-xl transition-all group relative flex flex-col h-full">
                   <button onClick={(e) => { e.stopPropagation(); toggleFavorite(product.id); }} className={`absolute top-1.5 right-1.5 z-20 w-6 h-6 md:w-8 md:h-8 rounded-md flex items-center justify-center transition-all ${favorited ? 'bg-[#c4a76d] text-[#1a2b4c]' : 'bg-slate-100 dark:bg-slate-950 text-slate-300 hover:text-[#c4a76d]'}`}>
-                    <i className={`${favorited ? 'fa-solid' : 'fa-regular'} fa-heart text-[8px] md:text-xs`}></i>
+                    <Heart size={14} className={favorited ? 'fill-current' : ''} />
                   </button>
                   <div className="aspect-square bg-[#f9f7f2] dark:bg-slate-950 rounded-md md:rounded-xl overflow-hidden mb-1.5 p-1 md:p-3 cursor-pointer" onClick={() => setSelectedProduct(product)}>
                     <img src={product.imageUrl} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110" />
@@ -211,9 +237,9 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
           </div>
           
           {filteredProducts.length === 0 && (
-            <div className="text-center py-20 opacity-40 space-y-4">
-              <i className="fa-solid fa-box-open text-5xl"></i>
-              <p className="font-black text-sm uppercase tracking-widest">{lang === 'ar' ? 'لا توجد منتجات' : 'No Items Found'}</p>
+            <div className="text-center py-20 opacity-40 space-y-4 flex flex-col items-center">
+              <PackageOpen size={48} />
+              <p className="font-black text-sm uppercase tracking-widest">{t('noProducts')}</p>
             </div>
           )}
         </div>
@@ -221,13 +247,13 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
 
       {/* Product Detail Modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-[200] bg-[#1a2b4c]/90 backdrop-blur-lg p-2 md:p-6 animate-fade-in flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-xl md:rounded-2xl shadow-3xl border border-white/5 flex flex-col md:flex-row relative max-h-[95vh] overflow-visible">
+        <div className="fixed inset-0 z-[500] bg-[#1a2b4c] md:bg-black/65 md:backdrop-blur-md animate-fade-in flex items-center justify-center p-0 md:p-4 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl min-h-screen md:min-h-[80vh] md:max-h-[90vh] md:rounded-3xl shadow-3xl flex flex-col md:flex-row relative overflow-hidden">
             <button 
               onClick={() => setSelectedProduct(null)} 
               className="absolute top-2 right-2 md:top-6 md:right-6 z-50 w-7 h-7 md:w-9 md:h-9 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 transition-colors shadow-lg"
             >
-              <i className="fa-solid fa-times text-sm md:text-lg"></i>
+              <X size={16} className="md:w-5 md:h-5" />
             </button>
 
             <div className="w-full md:w-1/2 bg-[#f9f7f2] dark:bg-slate-950 p-4 md:p-10 flex items-center justify-center shrink-0 min-h-[180px] md:min-h-0 rounded-t-xl md:rounded-t-none md:rounded-l-2xl overflow-hidden">
@@ -299,7 +325,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                                 style={{ backgroundColor: color.hex }}
                               >
                                 {selectedColor?.hex === color.hex && (
-                                  <i className="fa-solid fa-check text-white text-[10px] drop-shadow-md"></i>
+                                  <Check size={14} className="text-white drop-shadow-md" />
                                 )}
                                 {!color.isAvailable && (
                                   <div className="absolute inset-0 flex items-center justify-center">
@@ -332,7 +358,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                     onClick={() => toggleFavorite(selectedProduct.id)}
                     className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shadow-md transition-all ${isFavorite(selectedProduct.id) ? 'bg-[#c4a76d] text-[#1a2b4c]' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}
                   >
-                    <i className={`${isFavorite(selectedProduct.id) ? 'fa-solid' : 'fa-regular'} fa-heart text-xs md:text-base`}></i>
+                    <Heart size={16} className={isFavorite(selectedProduct.id) ? 'fill-current' : ''} />
                   </button>
 
                   <div className="relative flex-1">
@@ -340,8 +366,8 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                       onClick={() => setShowShareMenu(!showShareMenu)}
                       className={`w-full h-8 md:h-10 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all ${showShareMenu ? 'bg-[#1a2b4c] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}
                     >
-                      <i className="fa-solid fa-share-nodes text-xs md:text-sm"></i>
-                      <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{lang === 'ar' ? 'مشاركة' : 'Share'}</span>
+                      <Share2 size={12} className="md:w-4 md:h-4" />
+                      <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{t('share')}</span>
                     </button>
 
                     {showShareMenu && (
@@ -354,7 +380,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-green-500 text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-whatsapp text-xs"></i>
+                          <MessageCircle size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -363,7 +389,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-[#0088cc] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-telegram text-xs"></i>
+                          <Send size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -372,7 +398,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-[#1877f2] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-facebook-f text-xs"></i>
+                          <Facebook size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -381,17 +407,17 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-instagram text-xs"></i>
+                          <Instagram size={14} />
                         </button>
                         <button 
                           onClick={() => {
                             navigator.clipboard.writeText(window.location.href);
-                            toast.success(lang === 'ar' ? 'تم نسخ الرابط!' : 'Link copied!');
+                            toast.success(t('linkCopied'));
                             setShowShareMenu(false);
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-slate-200 text-slate-600 rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-solid fa-copy text-xs"></i>
+                          <Copy size={14} />
                         </button>
                       </div>
                     )}
@@ -410,7 +436,7 @@ const CatalogPage: React.FC<Props> = ({ lang, showOnlyDiscounted, showOnlyFlashS
                   }}
                   className="w-full bg-[#1a2b4c] text-white py-2.5 md:py-4 rounded-lg font-black text-[8px] md:text-base uppercase shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  <i className="fa-solid fa-cart-shopping text-xs"></i>
+                  <ShoppingCart size={16} className="md:w-5 md:h-5" />
                   {t('addToCart')}
                 </button>
               </div>

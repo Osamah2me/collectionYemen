@@ -8,6 +8,22 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 
+import { Search, Heart, Gem, X, Check, Share2, ShoppingCart, MessageCircle, Send, Copy } from 'lucide-react';
+
+const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+  </svg>
+);
+
+const Facebook = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+  </svg>
+);
+
 interface Props {
   lang: Language;
   showAll?: boolean;
@@ -119,7 +135,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
               {t('brideSection')}
             </h1>
             <p className="text-[#c4a76d] text-xs md:text-2xl font-bold uppercase tracking-widest">
-              {lang === 'ar' ? 'تجهيزات العروسة المتكاملة' : 'Complete Bride Preparation'}
+              {t('brideSubtitle')}
             </p>
           </div>
         </div>
@@ -130,12 +146,12 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
         <aside className="lg:w-60 space-y-4 md:space-y-6 shrink-0">
           {/* Search Bar */}
           <div className="relative group">
-            <i className="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1a2b4c] transition-colors"></i>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1a2b4c] transition-colors" size={18} />
             <input 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={lang === 'ar' ? 'بحث في قسم العروسة...' : 'Search in Bride section...'}
+              placeholder={t('searchBride')}
               className="w-full bg-white dark:bg-slate-900 border-2 border-[#e0e0e0] dark:border-white/5 rounded-xl py-3 pl-11 pr-4 text-[11px] font-bold focus:border-[#1a2b4c] outline-none transition-all"
             />
           </div>
@@ -167,7 +183,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
               return (
                 <div key={product.id} className="bg-white dark:bg-slate-900 p-1 md:p-1.5 rounded-lg md:rounded-xl border border-[#e0e0e0] dark:border-white/5 shadow-sm hover:shadow-lg transition-all group relative flex flex-col h-full">
                   <button onClick={() => toggleFavorite(product.id)} className={`absolute top-1 right-1 z-20 w-5 h-5 md:w-7 md:h-7 rounded-md flex items-center justify-center transition-all ${favorited ? 'bg-[#c4a76d] text-[#1a2b4c]' : 'bg-slate-100 dark:bg-slate-950 text-slate-300 hover:text-[#c4a76d]'}`}>
-                    <i className={`${favorited ? 'fa-solid' : 'fa-regular'} fa-heart text-[7px] md:text-[10px]`}></i>
+                    <Heart className={`${favorited ? 'fill-current' : ''}`} size={12} />
                   </button>
                   <div className="aspect-square bg-[#f9f7f2] dark:bg-slate-950 rounded-md md:rounded-lg overflow-hidden mb-1 p-1 md:p-2 cursor-pointer" onClick={() => setSelectedProduct(product)}>
                     <img src={product.imageUrl} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110" alt={product.name} />
@@ -190,8 +206,8 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
           
           {filteredProducts.length === 0 && (
             <div className="text-center py-20 opacity-40 space-y-4">
-              <i className="fa-solid fa-gem text-5xl"></i>
-              <p className="font-black text-sm uppercase tracking-widest">{lang === 'ar' ? 'لا توجد منتجات في هذا القسم' : 'No Items in this Section'}</p>
+              <Gem className="mx-auto" size={48} />
+              <p className="font-black text-sm uppercase tracking-widest">{t('noBrideProducts')}</p>
             </div>
           )}
         </div>
@@ -205,7 +221,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
               onClick={() => setSelectedProduct(null)} 
               className="absolute top-2 right-2 md:top-6 md:right-6 z-50 w-7 h-7 md:w-9 md:h-9 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 transition-colors shadow-lg"
             >
-              <i className="fa-solid fa-times text-sm md:text-lg"></i>
+              <X size={20} />
             </button>
 
             <div className="w-full md:w-1/2 bg-[#f9f7f2] dark:bg-slate-950 p-4 md:p-10 flex items-center justify-center shrink-0 min-h-[180px] md:min-h-0 rounded-t-xl md:rounded-t-none md:rounded-l-2xl overflow-hidden">
@@ -280,7 +296,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                                 style={{ backgroundColor: color.hex }}
                               >
                                 {selectedColor?.hex === color.hex && (
-                                  <i className="fa-solid fa-check text-white text-[10px] drop-shadow-md"></i>
+                                  <Check className="text-white drop-shadow-md" size={12} />
                                 )}
                                 {!color.isAvailable && (
                                   <div className="absolute inset-0 flex items-center justify-center">
@@ -313,7 +329,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                     onClick={() => toggleFavorite(selectedProduct.id)}
                     className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shadow-md transition-all ${isFavorite(selectedProduct.id) ? 'bg-[#c4a76d] text-[#1a2b4c]' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}
                   >
-                    <i className={`${isFavorite(selectedProduct.id) ? 'fa-solid' : 'fa-regular'} fa-heart text-xs md:text-base`}></i>
+                    <Heart className={`${isFavorite(selectedProduct.id) ? 'fill-current' : ''}`} size={18} />
                   </button>
 
                   <div className="relative flex-1">
@@ -321,8 +337,8 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                       onClick={() => setShowShareMenu(!showShareMenu)}
                       className={`w-full h-8 md:h-10 rounded-lg flex items-center justify-center gap-2 shadow-md transition-all ${showShareMenu ? 'bg-[#1a2b4c] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}
                     >
-                      <i className="fa-solid fa-share-nodes text-xs md:text-sm"></i>
-                      <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{lang === 'ar' ? 'مشاركة' : 'Share'}</span>
+                      <Share2 size={16} />
+                      <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{t('share')}</span>
                     </button>
 
                     {showShareMenu && (
@@ -335,7 +351,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-green-500 text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-whatsapp text-xs"></i>
+                          <MessageCircle size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -344,7 +360,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-[#0088cc] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-telegram text-xs"></i>
+                          <Send size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -353,7 +369,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-[#1877f2] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-facebook-f text-xs"></i>
+                          <Facebook size={14} />
                         </button>
                         <button 
                           onClick={() => {
@@ -362,17 +378,17 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-brands fa-instagram text-xs"></i>
+                          <Instagram size={14} />
                         </button>
                         <button 
                           onClick={() => {
                             navigator.clipboard.writeText(window.location.href);
-                            toast.success(lang === 'ar' ? 'تم نسخ الرابط!' : 'Link copied!');
+                            toast.success(t('linkCopied'));
                             setShowShareMenu(false);
                           }}
                           className="w-7 h-7 flex items-center justify-center bg-slate-200 text-slate-600 rounded-md hover:scale-110 transition-transform"
                         >
-                          <i className="fa-solid fa-copy text-xs"></i>
+                          <Copy size={14} />
                         </button>
                       </div>
                     )}
@@ -391,7 +407,7 @@ const BridePage: React.FC<Props> = ({ lang, showAll }) => {
                   }}
                   className="w-full bg-[#1a2b4c] text-white py-2.5 md:py-4 rounded-lg font-black text-[8px] md:text-base uppercase shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  <i className="fa-solid fa-cart-shopping text-xs"></i>
+                  <ShoppingCart size={18} />
                   {t('addToCart')}
                 </button>
               </div>

@@ -6,6 +6,25 @@ import { DB } from '../services/storage';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
+import { 
+  CheckCircle, 
+  Heart, 
+  HeartOff, 
+  ShoppingCart, 
+  X, 
+  MessageCircle, 
+  Share2, 
+  Send, 
+  Link as LinkIcon 
+} from 'lucide-react';
+
+const Instagram = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+  </svg>
+);
 
 interface Props { lang: Language; }
 
@@ -78,7 +97,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
     <div className="animate-fade-in space-y-8 pb-24">
       {showToast && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[100] bg-black text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce-in">
-           <i className="fa-solid fa-check-circle text-red-500 text-sm"></i>
+           <CheckCircle size={16} className="text-red-500" />
            <span className="font-black uppercase text-[10px] tracking-widest">{lang === 'ar' ? 'تمت الإضافة!' : 'Added!'}</span>
         </div>
       )}
@@ -88,7 +107,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#c4a76d] opacity-10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
         <div className="relative z-10 flex items-center gap-5">
           <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center text-white shadow-2xl">
-            <i className="fa-solid fa-heart text-2xl animate-pulse"></i>
+            <Heart size={24} className="animate-pulse fill-current" />
           </div>
           <div className="space-y-1">
             <h2 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">
@@ -105,7 +124,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
       {products.length === 0 ? (
         <div className="text-center py-24 bg-white dark:bg-[#1E293B] rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/5 space-y-4">
            <div className="w-16 h-16 bg-gray-50 dark:bg-[#0F172A] rounded-full mx-auto flex items-center justify-center text-gray-200 dark:text-white/5 shadow-inner">
-             <i className="fa-solid fa-heart-crack text-3xl"></i>
+             <HeartOff size={32} />
            </div>
            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">{lang === 'en' ? 'No favorites yet' : 'قائمة المفضلة فارغة'}</p>
         </div>
@@ -121,7 +140,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                 onClick={(e) => handleToggleFavorite(e, product.id)}
                 className="absolute top-4 right-4 z-20 w-7 h-7 rounded-lg bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-500/20 active:scale-90 transition-all"
               >
-                <i className="fa-solid fa-heart text-[10px]"></i>
+                <Heart size={14} className="fill-current" />
               </button>
 
               <div className="aspect-square bg-[#f9f7f2] dark:bg-[#0F172A] rounded-[1rem] md:rounded-[1.2rem] overflow-hidden mb-3 relative group-hover:scale-105 transition-transform duration-500">
@@ -143,7 +162,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                 onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
                 className="w-full mt-3 bg-[#1a2b4c] text-white py-2 rounded-lg text-[8px] font-black uppercase shadow-lg hover:bg-[#253b66] transition-all flex items-center justify-center gap-1.5"
               >
-                <i className="fa-solid fa-cart-shopping"></i>
+                <ShoppingCart size={12} />
                 {t('addToCart')}
               </button>
             </div>
@@ -159,7 +178,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                 onClick={() => setSelectedProduct(null)} 
                 className="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-10 h-10 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-500 hover:text-rose-500 transition-colors shadow-lg"
               >
-                <i className="fa-solid fa-times"></i>
+                <X size={20} />
               </button>
 
               <div className="w-full md:w-1/2 bg-[#f9f7f2] dark:bg-slate-950 p-6 md:p-12 flex items-center justify-center shrink-0 min-h-[300px] md:min-h-0">
@@ -196,11 +215,10 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                         onClick={() => toggleFavorite(selectedProduct.id)}
                         className={`flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all border-2 ${isFavorite(selectedProduct.id) ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-white/5 text-slate-400 hover:border-rose-500 hover:text-rose-500'}`}
                       >
-                        <i className={`${isFavorite(selectedProduct.id) ? 'fa-solid' : 'fa-regular'} fa-heart`}></i>
+                        <Heart size={16} className={isFavorite(selectedProduct.id) ? 'fill-current' : ''} />
                         {isFavorite(selectedProduct.id) ? (lang === 'ar' ? 'في المفضلة' : 'Favorited') : (lang === 'ar' ? 'إضافة للمفضلة' : 'Add to Favorites')}
                       </button>
-                      
-                      <button 
+                                            <button 
                         onClick={() => {
                           const text = lang === 'ar' 
                             ? `مرحباً، أود الاستفسار عن هذا المنتج: ${selectedProduct.nameAr} - السعر: ${selectedProduct.price} ريال`
@@ -211,7 +229,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                         className="w-12 h-12 md:w-14 md:h-14 bg-green-500 text-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
                         title={lang === 'ar' ? 'مشاركة للدعم الفني' : 'Share to Support'}
                       >
-                        <i className="fa-brands fa-whatsapp text-xl md:text-2xl"></i>
+                        <MessageCircle size={24} />
                       </button>
 
                       <div className="relative">
@@ -220,7 +238,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                           className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg transition-all ${showShareMenu ? 'bg-[#1a2b4c] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:scale-110 active:scale-95'}`}
                           title={lang === 'ar' ? 'مشاركة' : 'Share'}
                         >
-                          <i className="fa-solid fa-share-nodes text-xl md:text-2xl"></i>
+                          <Share2 size={24} />
                         </button>
 
                         {showShareMenu && (
@@ -235,7 +253,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                               }}
                               className="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-xl transition-colors text-green-600 font-black text-[10px] uppercase"
                             >
-                              <i className="fa-brands fa-whatsapp text-lg"></i>
+                              <MessageCircle size={18} />
                               WhatsApp
                             </button>
                             <button 
@@ -248,7 +266,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                               }}
                               className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-xl transition-colors text-blue-500 font-black text-[10px] uppercase"
                             >
-                              <i className="fa-brands fa-telegram text-lg"></i>
+                              <Send size={18} />
                               Telegram
                             </button>
                             <button 
@@ -259,7 +277,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                               }}
                               className="flex items-center gap-3 px-4 py-2.5 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors text-rose-500 font-black text-[10px] uppercase"
                             >
-                              <i className="fa-brands fa-instagram text-lg"></i>
+                              <Instagram size={18} />
                               Instagram
                             </button>
                             <div className="h-px bg-slate-100 dark:bg-white/5 mx-2"></div>
@@ -271,7 +289,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                               }}
                               className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-white/10 rounded-xl transition-colors text-slate-500 font-black text-[10px] uppercase"
                             >
-                              <i className="fa-solid fa-link text-lg"></i>
+                              <LinkIcon size={18} />
                               {lang === 'ar' ? 'نسخ الرابط' : 'Copy Link'}
                             </button>
                           </div>
@@ -283,7 +301,7 @@ const FavoritesPage: React.FC<Props> = ({ lang }) => {
                       onClick={() => { handleAddToCart(selectedProduct); setSelectedProduct(null); }}
                       className="w-full bg-[#1a2b4c] text-white py-5 md:py-6 rounded-2xl font-black text-sm md:text-lg uppercase shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3"
                     >
-                      <i className="fa-solid fa-cart-shopping"></i>
+                      <ShoppingCart size={20} />
                       {t('addToCart')}
                     </button>
                   </div>

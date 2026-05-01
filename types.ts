@@ -85,3 +85,12 @@ export enum PaymentMethod {
   ONECASH = 'ONECASH',
   TRANSFER = 'TRANSFER'
 }
+
+export interface AppSettings {
+  flashSaleEndTime?: string;
+  aboutUsAr?: string;
+  aboutUsEn?: string;
+  topBarAr?: string;
+  topBarEn?: string;
+  heroImageUrl?: string;
+}

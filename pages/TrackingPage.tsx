@@ -4,6 +4,23 @@ import { Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 import { DB, Order, OrderStatus } from '../services/storage';
 import { useAuth } from '../context/AuthContext';
+import { 
+  Search, 
+  Loader2, 
+  AlertTriangle, 
+  FileText, 
+  HandCoins, 
+  Hourglass, 
+  ShoppingBag, 
+  Plane, 
+  Warehouse, 
+  Truck, 
+  CheckCheck, 
+  Archive, 
+  RefreshCw, 
+  ExternalLink,
+  MessageCircle
+} from 'lucide-react';
 
 interface Props {
   lang: Language;
@@ -83,25 +100,25 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
           {t('trackOrder')}
         </h2>
         <p className="text-[#7a7a7a] font-medium text-[10px] md:text-sm">
-          {lang === 'en' ? 'Enter your global order reference ID' : 'أدخل رقم الطلب العالمي الخاص بك'}
+          {t('enterOrderId')}
         </p>
       </div>
 
-      <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-[#e0e0e0] max-w-lg mx-auto">
+      <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl md:rounded-[2.5rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 max-w-lg mx-auto">
         <form onSubmit={handleSearch} className="relative">
           <input 
             type="text"
             placeholder={t('orderNumber')}
             value={orderId}
             onChange={(e) => setOrderId(e.target.value)}
-            className="w-full px-4 md:px-8 py-4 md:py-6 rounded-xl md:rounded-3xl bg-gray-50 border-2 border-transparent focus:border-[#c4a76d] focus:bg-white outline-none transition-all font-black text-[#1a2b4c] uppercase pr-24 md:pr-40 text-xs md:text-base"
+            className="w-full px-4 md:px-8 py-4 md:py-6 rounded-xl md:rounded-3xl bg-gray-50 dark:bg-slate-950 border-2 border-transparent focus:border-[#c4a76d] focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-black text-[#1a2b4c] dark:text-white uppercase pr-24 md:pr-40 text-xs md:text-base"
           />
           <button 
             type="submit"
             disabled={isSearching}
             className="absolute right-2 top-2 bottom-2 md:right-3 md:top-3 md:bottom-3 bg-[#1a2b4c] text-white px-4 md:px-8 rounded-lg md:rounded-2xl text-[10px] md:text-xs font-black hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center gap-2"
           >
-            {isSearching ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-magnifying-glass"></i>}
+            {isSearching ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
             {t('track')}
           </button>
         </form>
@@ -119,7 +136,7 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
                 <button 
                   key={o.id}
                   onClick={() => handleSearch(undefined, o.id)}
-                  className="bg-white px-4 py-2 rounded-xl text-[10px] font-black border border-gray-100 hover:border-[#D4AF37] transition-all shadow-sm"
+                  className="bg-white dark:bg-slate-900 px-4 py-2 rounded-xl text-[10px] font-black border border-gray-100 dark:border-white/5 hover:border-[#D4AF37] transition-all shadow-sm text-[#1a2b4c] dark:text-white"
                 >
                   #{o.id}
                 </button>
@@ -130,7 +147,7 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
 
       {error && (
         <div className="max-w-md mx-auto bg-red-50 p-6 rounded-3xl border border-red-100 text-red-600 text-center animate-bounce-in">
-           <i className="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
+           <AlertTriangle size={24} className="mb-2 mx-auto" />
            <p className="font-black">{t('orderNotFound')}</p>
         </div>
       )}
@@ -146,7 +163,7 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
                 <h3 className="text-lg md:text-2xl font-black text-[#c4a76d] uppercase">{order.id}</h3>
               </div>
               <div className="text-right">
-                <span className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-[0.2em] md:tracking-[0.3em]">{lang === 'en' ? 'DATE' : 'التاريخ'}</span>
+                <span className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('date')}</span>
                 <p className="text-xs md:text-base font-bold text-gray-300">{new Date(order.date).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US')}</p>
               </div>
             </div>
@@ -164,15 +181,14 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
                           ? 'bg-[#c4a76d] text-[#1a2b4c] shadow-[0_0_20px_rgba(196,167,109,0.4)] rotate-3' 
                           : 'bg-white/5 text-gray-600 grayscale'
                       } ${isCurrent ? 'ring-2 md:ring-4 ring-white/10 scale-110' : ''}`}>
-                        <i className={`fa-solid ${
-                          status === 'awaiting_quote' ? 'fa-file-invoice-dollar' :
-                          status === 'quote_ready' ? 'fa-hand-holding-dollar' :
-                          status === 'pending' ? 'fa-hourglass-start' : 
-                          status === 'purchased' ? 'fa-bag-shopping' : 
-                          status === 'shipped' ? 'fa-plane-up' : 
-                          status === 'yemen' ? 'fa-warehouse' : 
-                          status === 'delivery' ? 'fa-truck-fast' : 'fa-check-double'
-                        } text-base md:text-lg`}></i>
+                        {status === 'awaiting_quote' && <FileText size={18} />}
+                        {status === 'quote_ready' && <HandCoins size={18} />}
+                        {status === 'pending' && <Hourglass size={18} />}
+                        {status === 'purchased' && <ShoppingBag size={18} />}
+                        {status === 'shipped' && <Plane size={18} />}
+                        {status === 'yemen' && <Warehouse size={18} />}
+                        {status === 'delivery' && <Truck size={18} />}
+                        {status === 'completed' && <CheckCheck size={18} />}
                       </div>
                       <div className="space-y-1">
                         <span className={`text-[7px] md:text-[9px] font-black uppercase tracking-widest ${isActive ? 'text-[#c4a76d]' : 'text-gray-600'}`}>
@@ -188,27 +204,27 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
             <div className="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/5 flex flex-col md:flex-row gap-4 md:gap-6 items-center justify-between">
                <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-[#c4a76d] rounded-xl md:rounded-2xl flex items-center justify-center text-[#1a2b4c]">
-                     <i className="fa-solid fa-box-archive text-base md:text-xl"></i>
+                     <Archive size={18} />
                   </div>
                   <div>
-                    <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest">{lang === 'en' ? 'ITEMS' : 'الأصناف'}</p>
-                    <p className="text-xs md:text-base font-bold">{order.items.length} {lang === 'en' ? 'Product(s)' : 'منتجات'}</p>
+                    <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest">{t('items')}</p>
+                    <p className="text-xs md:text-base font-bold">{order.items.length} {t('productsCount')}</p>
                   </div>
                </div>
                <div className="text-center md:text-right w-full md:w-auto border-y md:border-y-0 border-white/5 py-3 md:py-0">
-                  <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest">{lang === 'en' ? 'PAYMENT METHOD' : 'وسيلة الدفع'}</p>
+                  <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest">{t('paymentMethod')}</p>
                   <p className="text-xs md:text-base font-bold text-[#c4a76d]">{t(order.paymentMethod)}</p>
                </div>
                <div className="w-full md:w-auto">
-                  <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest text-center md:text-left">{lang === 'en' ? 'TOTAL VALUE' : 'إجمالي القيمة'}</p>
+                  <p className="text-[8px] md:text-[10px] text-white/40 font-black uppercase tracking-widest text-center md:text-left">{t('totalValue')}</p>
                   <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3">
                     <p className="text-xl md:text-2xl font-black text-[#c4a76d]">{order.total.toFixed(2)} SAR</p>
                     <button 
                       onClick={() => handleSearch(undefined, order.id)}
                       className="p-1.5 md:p-2 text-white/40 hover:text-[#c4a76d] transition-colors"
-                      title={lang === 'en' ? 'Refresh' : 'تحديث'}
+                      title={t('refresh')}
                     >
-                      <i className="fa-solid fa-rotate text-[10px] md:text-xs"></i>
+                      <RefreshCw size={12} className="md:w-4 md:h-4" />
                     </button>
                   </div>
                </div>
@@ -217,7 +233,7 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
             {/* Items List for Customer */}
             <div className="space-y-4">
               <h4 className="text-[10px] md:text-xs font-black text-white/60 uppercase tracking-[0.2em] px-2">
-                {lang === 'en' ? 'Order Details' : 'تفاصيل الطلب'}
+                {t('orderDetails')}
               </h4>
               <div className="grid gap-3">
                 {order.items.map((item, idx) => (
@@ -230,14 +246,14 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
                         <h5 className="text-[11px] md:text-sm font-black text-white line-clamp-1">{item.name}</h5>
                         <div className="flex items-center gap-3 mt-1">
                           <span className="text-[9px] md:text-[10px] text-[#c4a76d] font-black uppercase tracking-widest">
-                            {item.price > 0 ? `${item.price} SAR` : (lang === 'ar' ? 'بانتظار التسعير' : 'Awaiting Quote')}
+                            {item.price > 0 ? `${item.price} SAR` : t('awaitingQuote')}
                           </span>
                           <span className="text-[9px] md:text-[10px] text-white/40 font-bold">x{item.quantity}</span>
                         </div>
                         {item.productUrl && (
                           <a href={item.productUrl} target="_blank" rel="noreferrer" className="text-[8px] md:text-[9px] text-blue-400 hover:underline flex items-center gap-1 mt-1">
-                            <i className="fa-solid fa-external-link"></i>
-                            {lang === 'ar' ? 'رابط المنتج' : 'View Link'}
+                            <ExternalLink size={10} />
+                            {t('viewLink')}
                           </a>
                         )}
                       </div>
@@ -256,12 +272,10 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
               <div className="bg-amber-500/10 p-6 md:p-8 rounded-2xl md:rounded-[2.5rem] border border-amber-500/20 flex flex-col items-center gap-4 md:gap-6 mt-6 md:mt-8">
                 <div className="text-center space-y-1 md:space-y-2">
                   <h4 className="text-base md:text-lg font-black text-amber-500 uppercase tracking-tight">
-                    {lang === 'en' ? 'Awaiting Pricing' : 'بانتظار التسعير'}
+                    {t('awaitingQuote')}
                   </h4>
                   <p className="text-[8px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed max-w-xs mx-auto">
-                    {lang === 'en' 
-                      ? 'Our team is reviewing your links to set the final price. You will be notified once it is ready.' 
-                      : 'يقوم فريقنا بمراجعة الروابط لتحديد السعر النهائي. سيتم إشعارك فور جاهزية التسعيرة.'}
+                    {t('awaitingPricingDesc')}
                   </p>
                 </div>
               </div>
@@ -271,12 +285,10 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
               <div className="bg-green-500/10 p-6 md:p-8 rounded-2xl md:rounded-[2.5rem] border border-green-500/20 flex flex-col items-center gap-4 md:gap-6 mt-6 md:mt-8">
                 <div className="text-center space-y-1 md:space-y-2">
                   <h4 className="text-base md:text-lg font-black text-green-500 uppercase tracking-tight">
-                    {lang === 'en' ? 'Quote Ready - Please Pay' : 'التسعيرة جاهزة - يرجى الدفع'}
+                    {t('quoteReadyTitle')}
                   </h4>
                   <p className="text-[8px] md:text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed max-w-xs mx-auto">
-                    {lang === 'en' 
-                      ? 'The price has been set. Please pay via Kuraimi, OneCash or Jeeb and send the receipt.' 
-                      : 'تم تحديد السعر. يرجى الدفع عبر الكريمي، ون كاش أو جيب وإرسال الإيصال.'}
+                    {t('quoteReadyDesc')}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
@@ -295,16 +307,14 @@ const TrackingPage: React.FC<Props> = ({ lang }) => {
                 </div>
                 <button 
                   onClick={() => {
-                    const text = lang === 'ar' 
-                      ? `مرحباً، أرغب في تأكيد الدفع للطلب رقم: ${order.id}. المجموع: ${order.total} ريال.`
-                      : `Hello, I want to confirm payment for order: ${order.id}. Total: ${order.total} SAR.`;
+                    const text = t('whatsappPaymentMsg') + order.id + t('whatsappPaymentTotal') + order.total + t('whatsappPaymentCurrency');
                     const phone = '+967774757728';
                     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
                   }}
                   className="bg-green-500 text-white px-6 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-[10px] md:text-sm uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 md:gap-3 w-full justify-center"
                 >
-                  <i className="fa-brands fa-whatsapp text-lg md:text-xl"></i>
-                  {lang === 'ar' ? 'إرسال إيصال الدفع' : 'Send Payment Receipt'}
+                  <MessageCircle size={18} className="md:w-5 md:h-5" />
+                  {t('sendReceipt')}
                 </button>
               </div>
             )}

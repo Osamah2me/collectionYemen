@@ -2,6 +2,16 @@
 import React from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS } from '../constants';
+import { 
+  Search, 
+  MessageCircle, 
+  Wallet, 
+  MapPin, 
+  Globe, 
+  Truck, 
+  Shield, 
+  Gem 
+} from 'lucide-react';
 
 interface Props {
   lang: Language;
@@ -14,7 +24,7 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
   const steps = [
     {
       id: 1,
-      icon: 'fa-magnifying-glass-location',
+      icon: <Search />,
       title: lang === 'ar' ? 'اختر المتجر' : 'Pick a Store',
       desc: lang === 'ar' ? 'تصفح قائمة المتاجر العالمية المتاحة في التطبيق.' : 'Browse the list of available global stores in the app.',
       action: () => setView('home'),
@@ -23,7 +33,7 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
     },
     {
       id: 2,
-      icon: 'fa-comments',
+      icon: <MessageCircle />,
       title: lang === 'ar' ? 'تواصل معنا' : 'Contact Support',
       desc: lang === 'ar' ? 'زودنا برابط المنتج الذي تريده عبر الواتساب.' : 'Provide us with the product link you want via WhatsApp.',
       action: () => window.open('https://wa.me/967774757728', '_blank'),
@@ -32,7 +42,7 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
     },
     {
       id: 3,
-      icon: 'fa-credit-card',
+      icon: <Wallet />,
       title: lang === 'ar' ? 'الدفع المحلي' : 'Local Payment',
       desc: lang === 'ar' ? 'أكد طلبك وادفع عبر الكريمي أو ون كاش بكل سهولة.' : 'Confirm your order and pay via Kuraimi or OneCash easily.',
       action: () => setView('auth'),
@@ -41,7 +51,7 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
     },
     {
       id: 4,
-      icon: 'fa-map-location-dot',
+      icon: <MapPin />,
       title: lang === 'ar' ? 'تتبع واستلم' : 'Track & Receive',
       desc: lang === 'ar' ? 'تابع مسار شحنتك حتى تصل لباب بيتك في اليمن.' : 'Track your shipment until it reaches your door in Yemen.',
       action: () => setView('tracking'),
@@ -52,22 +62,22 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
 
   const features = [
     { 
-      i: 'fa-globe-asia', 
+      i: <Globe />, 
       title: lang === 'ar' ? 'متاجر عالمية' : 'Global Stores',
       t: lang === 'ar' ? 'تسوق من أشهر 13 متجراً عالمياً في مكان واحد.' : 'Shop from 13+ famous global stores in one place.' 
     },
     { 
-      i: 'fa-wallet', 
+      i: <Wallet />, 
       title: lang === 'ar' ? 'دفع محلي' : 'Local Payment',
       t: lang === 'ar' ? 'ادفع عبر الكريمي، ون كاش، أو جيب بكل سهولة.' : 'Pay via Kuraimi, OneCash, or Jeeb with ease.' 
     },
     { 
-      i: 'fa-truck-fast', 
+      i: <Truck />, 
       title: lang === 'ar' ? 'شحن آمن' : 'Safe Shipping',
       t: lang === 'ar' ? 'نضمن وصول منتجاتك من المصدر إلى باب بيتك في اليمن.' : 'We guarantee your products reach your door in Yemen safely.' 
     },
     { 
-      i: 'fa-shield-halved', 
+      i: <Shield />, 
       title: lang === 'ar' ? 'حماية كاملة' : 'Full Protection',
       t: lang === 'ar' ? 'فريقنا يتابع طلبك لحظة بلحظة حتى الاستلام.' : 'Our team tracks your order every step until it reaches you.' 
     }
@@ -95,8 +105,8 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
                 0{step.id}
               </div>
 
-              <div className="w-24 h-24 bg-[#f9f7f2] dark:bg-slate-950 rounded-[2.5rem] flex items-center justify-center text-4xl text-[#c4a76d] shadow-inner group-hover:scale-110 transition-transform duration-500">
-                <i className={`fa-solid ${step.icon}`}></i>
+              <div className="w-24 h-24 bg-[#f9f7f2] dark:bg-slate-950 rounded-[2.5rem] flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500 text-[#c4a76d]">
+                {React.cloneElement(step.icon as React.ReactElement, { size: 40 })}
               </div>
 
               <div className="space-y-4 flex-1">
@@ -137,7 +147,7 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
               {features.map((item, idx) => (
                 <div key={idx} className="flex gap-6 items-center bg-white/5 p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-all group">
                   <div className="w-14 h-14 bg-[#c4a76d] rounded-2xl shrink-0 flex items-center justify-center text-[#1a2b4c] transition-transform group-hover:scale-110">
-                    <i className={`fa-solid ${item.i} text-2xl`}></i>
+                    {React.cloneElement(item.i as React.ReactElement, { size: 28 })}
                   </div>
                   <div className="space-y-1">
                     <h4 className="text-white font-black text-sm md:text-xl uppercase tracking-tight">
@@ -153,8 +163,8 @@ const TutorialPage: React.FC<Props> = ({ lang, setView }) => {
           </div>
           
           <div className="w-full lg:w-96 bg-gradient-to-br from-white/10 to-transparent backdrop-blur-3xl p-12 rounded-[4rem] border border-white/20 space-y-8 text-center shadow-2xl">
-             <div className="w-24 h-24 bg-[#c4a76d] rounded-full mx-auto flex items-center justify-center text-[#1a2b4c] text-4xl shadow-[0_0_50px_rgba(196,167,109,0.5)]">
-               <i className="fa-solid fa-gem"></i>
+             <div className="w-24 h-24 bg-[#c4a76d] rounded-full mx-auto flex items-center justify-center text-[#1a2b4c] shadow-[0_0_50px_rgba(196,167,109,0.5)]">
+               <Gem size={48} />
              </div>
              <div className="space-y-3">
                <h4 className="font-black text-xl uppercase">{lang === 'ar' ? 'ابدأ رحلتك اليوم' : 'Start Today'}</h4>

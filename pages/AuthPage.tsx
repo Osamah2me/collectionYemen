@@ -5,6 +5,19 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { TRANSLATIONS, APP_LOGO } from '../constants';
 import { DB, Order } from '../services/storage';
+import { toast } from 'react-hot-toast';
+
+import { 
+  Crown, 
+  Bell, 
+  BellOff, 
+  Settings, 
+  LogOut, 
+  Box, 
+  ReceiptText, 
+  Loader2,
+  UserCircle
+} from 'lucide-react';
 
 interface Props {
   lang: Language;
@@ -57,7 +70,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
       }
       onAuthSuccess();
     } catch (err) {
-      alert("Authentication failed. Please check your credentials.");
+      toast.error(lang === 'ar' ? 'فشل تسجيل الدخول. يرجى التحقق من البيانات.' : "Authentication failed. Please check your credentials.");
     }
   };
 
@@ -84,7 +97,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
                 <h2 className="text-4xl font-black tracking-tight">{user.name}</h2>
                 {user.isAdmin && (
                   <div className="flex items-center gap-2 bg-[#c4a76d] text-[#1a2b4c] text-[10px] font-black px-4 py-1.5 rounded-full uppercase ring-4 ring-[#c4a76d]/20">
-                    <i className="fa-solid fa-crown"></i>
+                    <Crown size={12} />
                     ADMIN
                   </div>
                 )}
@@ -96,7 +109,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
                   onClick={requestPermission}
                   className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${permission === 'granted' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20 animate-pulse'}`}
                 >
-                  <i className={`fa-solid ${permission === 'granted' ? 'fa-bell-slash' : 'fa-bell'}`}></i>
+                  {permission === 'granted' ? <BellOff size={14} /> : <Bell size={14} />}
                   {permission === 'granted' ? (lang === 'ar' ? 'الإشعارات مفعلة' : 'Notifs Enabled') : (lang === 'ar' ? 'تفعيل الإشعارات' : 'Enable Notifs')}
                 </button>
 
@@ -105,7 +118,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
                     onClick={() => setView('admin')}
                     className="bg-[#c4a76d] text-[#1a2b4c] px-8 py-3 rounded-2xl font-black text-[10px] uppercase shadow-2xl shadow-[#c4a76d]/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                   >
-                    <i className="fa-solid fa-gears"></i>
+                    <Settings size={14} />
                     {lang === 'en' ? 'DASHBOARD' : 'لوحة التحكم'}
                   </button>
                 )}
@@ -113,9 +126,9 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
             </div>
             <button 
               onClick={logout}
-              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-all px-8 py-4 rounded-2xl font-black text-xs border border-red-500/20 uppercase tracking-widest"
+              className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-all px-8 py-4 rounded-2xl font-black text-xs border border-red-500/20 uppercase tracking-widest flex items-center gap-2"
             >
-              <i className="fa-solid fa-power-off mr-2"></i>
+              <LogOut size={16} />
               {t('logout')}
             </button>
           </div>
@@ -132,7 +145,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
 
           {orders.length === 0 ? (
             <div className="bg-white dark:bg-[#1E293B] p-20 rounded-[3rem] text-center border-2 border-dashed border-[#e0e0e0] dark:border-white/5">
-              <i className="fa-solid fa-box-open text-4xl text-gray-100 dark:text-white/5 mb-4"></i>
+              <Box className="mx-auto text-gray-100 dark:text-white/5 mb-4" size={48} />
               <p className="text-[#7a7a7a] font-black text-lg">{lang === 'en' ? 'Your history is clear' : 'لا توجد طلبات في سجلك'}</p>
             </div>
           ) : (
@@ -142,7 +155,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-gray-50 dark:bg-[#0F172A] rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-[#1a2b4c]/10 group-hover:text-[#1a2b4c] transition-colors">
-                        <i className="fa-solid fa-receipt text-xl"></i>
+                        <ReceiptText size={20} />
                       </div>
                       <div>
                         <span className="text-[10px] text-[#7a7a7a] font-black uppercase tracking-tighter">ID: {order.id.toUpperCase()}</span>
@@ -172,8 +185,8 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
   }
 
   return (
-    <div className="max-w-md mx-auto py-12 animate-slide-up">
-      <div className="bg-white dark:bg-[#1E293B] p-10 md:p-12 rounded-[3.5rem] shadow-2xl border border-[#e0e0e0] dark:border-white/5 relative overflow-hidden">
+    <div className="max-w-md mx-auto py-6 md:py-12 animate-slide-up px-4">
+      <div className="bg-white dark:bg-[#1E293B] p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-[#e0e0e0] dark:border-white/5 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-2 bg-[#1a2b4c]"></div>
         <div className="text-center mb-10">
            <div className="w-24 h-24 mx-auto mb-6 bg-gray-50 dark:bg-[#0F172A] p-4 rounded-[2rem] border border-[#e0e0e0] dark:border-white/5 shadow-inner overflow-hidden">
@@ -194,7 +207,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
               <input 
                 type="text" required
                 value={name} onChange={e => setName(e.target.value)}
-                className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700" 
+                className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700" 
                 placeholder="Name"
               />
             </div>
@@ -204,7 +217,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
             <input 
               type="email" required
               value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700"
+              className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700"
               placeholder="example@email.com"
             />
           </div>
@@ -213,7 +226,7 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
             <input 
               type="password" required
               value={pass} onChange={e => setPass(e.target.value)}
-              className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700"
+              className="w-full px-8 py-5 rounded-2xl bg-gray-50 dark:bg-[#0F172A] border-2 border-transparent focus:border-[#c4a76d] focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-bold text-[#1a2b4c] dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-700"
               placeholder="••••••••"
             />
           </div>
@@ -222,9 +235,9 @@ const AuthPage: React.FC<Props> = ({ lang, onAuthSuccess, setView }) => {
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#1a2b4c] text-white py-6 rounded-2xl font-black text-xl shadow-2xl shadow-[#1a2b4c]/10 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest disabled:opacity-50"
+              className="w-full bg-[#1a2b4c] text-white py-6 rounded-2xl font-black text-xl shadow-2xl shadow-[#1a2b4c]/10 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest disabled:opacity-50 flex items-center justify-center"
             >
-              {isLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? t('login') : t('signup'))}
+              {isLoading ? <Loader2 className="animate-spin" size={24} /> : (isLogin ? t('login') : t('signup'))}
             </button>
 
             <div className="relative flex items-center py-4">

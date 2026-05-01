@@ -13,7 +13,7 @@ const SplashScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className={`fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-[#1a2b4c] transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-[#1a2b4c] transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
       {/* Background Decorative Elements */}
       <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[#c4a76d] opacity-[0.05] rounded-full -mr-48 -mt-48 blur-[180px]"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#c4a76d] opacity-[0.02] rounded-full -ml-32 -mb-32 blur-[120px]"></div>

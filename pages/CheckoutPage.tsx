@@ -7,6 +7,21 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { DB, Order } from '../services/storage';
+import { 
+  CheckCircle2, 
+  Copy, 
+  Check, 
+  MessageCircle, 
+  Truck, 
+  MapPin, 
+  Building2, 
+  Wallet, 
+  ArrowRight, 
+  ArrowLeft, 
+  Loader2,
+  Landmark,
+  CreditCard
+} from 'lucide-react';
 
 interface Props { lang: Language; onComplete: () => void; }
 
@@ -46,6 +61,12 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
     setTriedSubmitting(true);
     if (!formData.name || !formData.phone || !formData.address) {
       toast.error(lang === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill all required fields');
+      return;
+    }
+
+    const phoneRegex = /^(77|73|71|70|78)\d{7}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      toast.error(lang === 'ar' ? 'يرجى إدخال رقم هاتف يمني صحيح (9 أرقام يبدأ بـ 77، 73، 71، 70 أو 78)' : 'Please enter a valid Yemeni phone number (9 digits starting with 77, 73, 71, 70 or 78)');
       return;
     }
 
@@ -103,7 +124,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
     }
   };
 
-  const PaymentOption = ({ type, icon, title, subtitle, details, color }: { type: PaymentMethod, icon: string, title: string, subtitle?: string, details?: string[], color: string }) => (
+  const PaymentOption = ({ type, icon: Icon, title, subtitle, details, color }: { type: PaymentMethod, icon: any, title: string, subtitle?: string, details?: string[], color: string }) => (
     <div 
       onClick={() => setMethod(type)}
       className={`p-4 md:p-6 rounded-2xl md:rounded-[2.5rem] border-2 transition-all cursor-pointer flex flex-col gap-3 md:gap-4 relative overflow-hidden ${method === type ? `border-[${color}] bg-white dark:bg-slate-900 shadow-2xl ring-4 md:ring-8 ring-${color}/5` : 'border-slate-100 dark:border-white/5 bg-white dark:bg-slate-900/40 hover:border-slate-200'}`}
@@ -111,7 +132,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
     >
       <div className="flex items-center gap-3 md:gap-5 relative z-10">
         <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all shadow-lg ${method === type ? 'text-white' : 'bg-slate-50 dark:bg-slate-800 text-slate-300'}`} style={{ backgroundColor: method === type ? color : '' }}>
-          <i className={`${icon} text-base md:text-xl`}></i>
+          <Icon size={method === type ? 24 : 20} className="md:w-6 md:h-6" />
         </div>
         <div className="flex-1">
           <h4 className={`text-xs md:text-lg font-black transition-colors ${method === type ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>{title}</h4>
@@ -139,7 +160,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
           </div>
         </div>
       )}
-      <i className={`${icon} absolute -bottom-4 -right-4 text-6xl md:text-8xl opacity-[0.03] rotate-12`}></i>
+      <Icon size={80} className={`absolute -bottom-4 -right-4 opacity-[0.03] rotate-12 md:w-24 md:h-24`} />
 
       {method === PaymentMethod.CARD && type === PaymentMethod.CARD && (
         <div className="mt-4 space-y-4 animate-slide-up border-t border-slate-50 dark:border-white/10 pt-6">
@@ -191,7 +212,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
       <div className="fixed inset-0 z-[100] bg-[#1a2b4c]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
         <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 max-w-sm w-full text-center space-y-6 animate-bounce-in shadow-3xl border border-[#c4a76d]/20 overflow-y-auto max-h-[90vh] no-scrollbar">
           <div className="w-20 h-20 bg-green-500 rounded-3xl text-white flex items-center justify-center mx-auto shadow-lg rotate-6">
-             <i className="fa-solid fa-check-double text-3xl"></i>
+             <CheckCircle2 size={40} />
           </div>
           <div className="space-y-2">
             <h2 className="text-xl md:text-2xl font-black text-[#1a2b4c] dark:text-white uppercase tracking-tighter">{t('orderSuccess')}</h2>
@@ -207,7 +228,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
                 onClick={copyToClipboard}
                 className="w-full bg-[#e0e0e0] dark:bg-slate-800 text-[#1a2b4c] dark:text-slate-300 py-3 rounded-xl font-black text-[10px] flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-sm"
               >
-                <i className={isCopied ? "fa-solid fa-check" : "fa-solid fa-copy"}></i>
+                {isCopied ? <Check size={14} /> : <Copy size={14} />}
                 {isCopied ? t('copied') : t('copyId')}
               </button>
 
@@ -221,7 +242,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
                 }}
                 className="w-full bg-green-500 text-white py-3.5 rounded-xl font-black text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
               >
-                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <MessageCircle size={18} />
                 {lang === 'ar' ? 'إرسال الإيصال للواتساب' : 'Send Receipt to WhatsApp'}
               </button>
             </div>
@@ -251,7 +272,6 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
     <div className="pb-24 animate-fade-in max-w-2xl mx-auto space-y-8 md:space-y-12 px-2 md:px-0">
       <div className="text-center space-y-2 md:space-y-4">
         <h2 className="text-2xl md:text-6xl font-black tracking-tighter text-[#1a2b4c] dark:text-white uppercase">{t('checkout')}</h2>
-        <div className="w-16 md:w-24 h-1 md:h-1.5 bg-[#c4a76d] mx-auto rounded-full"></div>
       </div>
       
       <div className="grid gap-8 md:gap-12">
@@ -259,7 +279,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
         <section className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-3xl md:rounded-[3rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 space-y-6">
           <div className="flex items-center gap-4 mb-2">
             <div className="w-10 h-10 bg-[#1a2b4c] rounded-xl flex items-center justify-center text-[#c4a76d]">
-              <i className="fa-solid fa-truck-fast"></i>
+              <Truck size={20} />
             </div>
             <h3 className="text-lg md:text-xl font-black text-[#1a2b4c] dark:text-white uppercase tracking-tight">
               {lang === 'ar' ? 'بيانات الشحن والتواصل' : 'Shipping & Contact Info'}
@@ -287,7 +307,10 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
               <input 
                 type="tel"
                 value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 9);
+                  setFormData({...formData, phone: val});
+                }}
                 className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-xl py-4 px-4 text-sm font-bold transition-all outline-none ${triedSubmitting && !formData.phone ? 'border-rose-500 shadow-[0_0_0_4px_rgba(244,63,94,0.1)]' : 'border-slate-100 dark:border-white/5 focus:border-[#c4a76d]'}`}
                 placeholder="77xxxxxxx"
                 dir="ltr"
@@ -310,28 +333,28 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
 
         <section className="space-y-4 md:space-y-6">
           <div className="flex items-center gap-3 md:gap-4 px-2">
-            <i className="fa-solid fa-location-dot text-[#c4a76d] text-sm md:text-base"></i>
+            <MapPin size={16} className="text-[#c4a76d]" />
             <h3 className="text-[9px] md:text-[11px] font-black text-[#7a7a7a] uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('localYemen')}</h3>
             <div className="h-px flex-1 bg-[#e0e0e0] dark:bg-white/5"></div>
           </div>
           <div className="grid gap-4 md:gap-5">
             <PaymentOption 
               type={PaymentMethod.KURAIMI} 
-              icon="fa-solid fa-building-columns" 
+              icon={Landmark} 
               title={t('kuraimi')} 
               details={[`النقطة: 1570812`, `الاسم: كوليكشن`]}
               color="#006738"
             />
             <PaymentOption 
               type={PaymentMethod.JEEB} 
-              icon="fa-solid fa-wallet" 
+              icon={Wallet} 
               title={t('jeeb')} 
               details={[`الرقم: 774757728`, `الاسم: حسام المحبشي`]}
               color="#020617"
             />
             <PaymentOption 
               type={PaymentMethod.ONECASH} 
-              icon="fa-solid fa-money-bill-transfer" 
+              icon={Building2} 
               title={t('onecash')} 
               details={[`الرقم: 772023660`, `الاسم: أمجد المقري`]}
               color="#EE2A24"
@@ -339,20 +362,7 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
           </div>
         </section>
 
-        <section className="space-y-4 md:space-y-6">
-          <div className="flex items-center gap-3 md:gap-4 px-2">
-             <i className="fa-solid fa-globe text-[#c4a76d] text-sm md:text-base"></i>
-             <h3 className="text-[9px] md:text-[11px] font-black text-[#7a7a7a] uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('visaMada')}</h3>
-             <div className="h-px flex-1 bg-[#e0e0e0] dark:bg-white/5"></div>
-          </div>
-          <PaymentOption 
-            type={PaymentMethod.CARD} 
-            icon="fa-solid fa-credit-card" 
-            title={lang === 'en' ? 'Global Cards' : 'الدفع بالبطاقة العالمية'} 
-            subtitle="Mada, Visa, Mastercard"
-            color="#c4a76d"
-          />
-        </section>
+
 
         {/* Confirmation Summary - Now following the flow, not floating */}
         <div className="bg-[#1a2b4c] p-6 md:p-8 rounded-3xl md:rounded-[3rem] shadow-3xl border border-white/10 flex flex-col items-center gap-4 md:gap-6 mt-8 md:mt-12">
@@ -383,11 +393,11 @@ const CheckoutPage: React.FC<Props> = ({ lang, onComplete }) => {
             className="w-full bg-[#c4a76d] text-[#1a2b4c] py-4 md:py-6 rounded-xl md:rounded-2xl font-black text-sm md:text-xl hover:scale-[1.03] active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 md:gap-3 shadow-2xl shadow-[#c4a76d]/20 uppercase tracking-tight"
           >
             {isProcessing ? (
-              <i className="fa-solid fa-spinner fa-spin text-lg md:text-3xl"></i>
+              <Loader2 size={32} className="animate-spin" />
             ) : (
               <>
                 <span>{lang === 'en' ? 'CONFIRM ORDER' : 'تأكيد الطلب الآن'}</span>
-                <i className={`fa-solid ${lang === 'en' ? 'fa-arrow-right' : 'fa-arrow-left'} text-sm md:text-xl`}></i>
+                {lang === 'en' ? <ArrowRight size={24} /> : <ArrowLeft size={24} />}
               </>
             )}
           </button>

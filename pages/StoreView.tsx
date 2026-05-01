@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { ArrowLeft, ArrowRight, ExternalLink, MessageCircle, Link, Loader2, ShieldCheck, Truck } from 'lucide-react';
 import { Language, CartItem } from '../types';
 import { STORES, TRANSLATIONS } from '../constants';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { extractProductDetails } from '../services/gemini';
 
 interface Props {
   lang: Language;
@@ -65,7 +65,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
       {/* Header Navigation */}
       <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 flex items-center justify-between">
         <button onClick={onBack} className="w-10 h-10 md:w-12 md:h-12 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-[#1a2b4c] hover:bg-[#1a2b4c]/10 transition-colors">
-          <i className={`fa-solid ${lang === 'en' ? 'fa-arrow-left' : 'fa-arrow-right'}`}></i>
+          {lang === 'en' ? <ArrowLeft size={20} /> : <ArrowRight size={20} />}
         </button>
         <div className="text-center">
            <h2 className="font-black text-lg md:text-xl text-[#1a2b4c] dark:text-white uppercase tracking-tighter">{lang === 'en' ? store.name : store.nameAr}</h2>
@@ -102,14 +102,14 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
                 onClick={() => window.open(store.url, '_blank')} 
                 className="flex-1 bg-white text-[#1a2b4c] py-5 md:py-6 rounded-2xl font-black text-xs md:text-sm uppercase hover:bg-[#f5f1e8] transition-all shadow-xl flex items-center justify-center gap-3"
               >
-                <i className="fa-solid fa-external-link-alt"></i>
+                <ExternalLink size={18} />
                 {lang === 'ar' ? 'زيارة الموقع الرسمي' : 'Visit Official Site'}
               </button>
               <button 
                 onClick={handleSupportContact}
                 className="flex-1 bg-[#c4a76d] text-[#1a2b4c] py-5 md:py-6 rounded-2xl font-black text-xs md:text-sm uppercase hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-3"
               >
-                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <MessageCircle size={20} />
                 {lang === 'ar' ? 'طلب عبر الواتساب' : 'Order via WhatsApp'}
               </button>
            </div>
@@ -120,7 +120,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
       <div className="bg-white dark:bg-slate-900 p-8 md:p-12 rounded-[3rem] shadow-xl border border-[#e0e0e0] dark:border-white/5 space-y-8">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-[#1a2b4c]/5 rounded-2xl flex items-center justify-center text-[#1a2b4c]">
-            <i className="fa-solid fa-link text-xl"></i>
+            <Link size={24} />
           </div>
           <div>
             <h4 className="font-black text-[#1a2b4c] dark:text-white uppercase text-sm md:text-lg">
@@ -148,7 +148,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
                 disabled={isSubmitting}
                 className="h-full bg-[#1a2b4c] text-white px-6 md:px-10 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#253b66] active:scale-95 transition-all disabled:opacity-50"
               >
-                {isSubmitting ? <i className="fa-solid fa-spinner fa-spin"></i> : (lang === 'ar' ? 'إرسال' : 'SUBMIT')}
+                {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : (lang === 'ar' ? 'إرسال' : 'SUBMIT')}
               </button>
             </div>
           </div>
@@ -162,7 +162,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-[#e0e0e0] dark:border-white/5 space-y-4 shadow-lg">
             <div className="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500">
-               <i className="fa-solid fa-shield-check text-xl"></i>
+               <ShieldCheck size={24} />
             </div>
             <h4 className="font-black text-[#1a2b4c] dark:text-white uppercase text-sm">{lang === 'ar' ? 'تسوق آمن ومضمون' : 'Safe & Guaranteed'}</h4>
             <p className="text-[11px] text-[#7a7a7a] font-bold leading-relaxed uppercase">
@@ -171,7 +171,7 @@ const StoreView: React.FC<Props> = ({ lang, storeId, onBack }) => {
          </div>
          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-[#e0e0e0] dark:border-white/5 space-y-4 shadow-lg">
             <div className="w-12 h-12 bg-amber-50 dark:bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500">
-               <i className="fa-solid fa-truck-fast text-xl"></i>
+               <Truck size={24} />
             </div>
             <h4 className="font-black text-[#1a2b4c] dark:text-white uppercase text-sm">{lang === 'ar' ? 'شحن دولي موحد' : 'Unified Shipping'}</h4>
             <p className="text-[11px] text-[#7a7a7a] font-bold leading-relaxed uppercase">

@@ -12,13 +12,12 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 // ملاحظة: يجب وضع قيم المشروع الخاصة بك هنا في حال استخدام مشروع خاص
 // وإلا سيعتمد التطبيق على التهيئة التلقائية للمنصة
 const firebaseConfig = {
-  apiKey: "AIzaSyBfwxs-2wnTMzU6cA_PNCf8xRCKJpbu3IQ",
-  authDomain: "collectionstore-6e14c.firebaseapp.com",
-  projectId: "collectionstore-6e14c",
-  storageBucket: "collectionstore-6e14c.firebasestorage.app",
-  messagingSenderId: "891941546892",
-  appId: "1:891941546892:web:950f598ee27a2f964d84a9",
-  measurementId: "G-8M5N61GKRD"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "collection-yemen.firebaseapp.com",
+  projectId: "collection-yemen",
+  storageBucket: "collection-yemen.appspot.com",
+  messagingSenderId: "YOUR_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);

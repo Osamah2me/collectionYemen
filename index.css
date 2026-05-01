@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-heading: 'Tajawal', sans-serif;
+  --font-heading: 'Cairo', sans-serif;
   --font-body: 'Tajawal', sans-serif;
 
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
@@ -60,7 +60,7 @@
 }
 
 :root {
-  --font-heading: 'Tajawal', sans-serif;
+  --font-heading: 'Cairo', sans-serif;
   --font-body: 'Tajawal', sans-serif;
   
   --primary-navy: #1a2b4c;
@@ -76,6 +76,10 @@
   box-sizing: border-box;
 }
 
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
 body {
   font-family: var(--font-body);
   -webkit-text-size-adjust: 100%;
@@ -83,6 +87,42 @@ body {
   overflow-x: hidden;
   background-color: var(--secondary-beige);
   color: var(--primary-navy);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.dark body {
+  background-color: #020617;
+  color: #f1f5f9;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #ffffff;
+}
+
+.dark p, .dark span, .dark label {
+  color: #cbd5e1;
+}
+
+/* Ensure that elements with primary navy text become light in dark mode if not specified */
+.dark .text-\[\#1a2b4c\] {
+  color: #f1f5f9;
+}
+
+/* Ensure that elements with text-gray become readable */
+.dark .text-\[\#7a7a7a\], .dark .text-gray-500, .dark .text-slate-500 {
+  color: #94a3b8;
+}
+
+.dark .bg-white {
+  background-color: #0f172a;
+}
+
+.dark .bg-\[\#f5f1e8\], .dark .bg-\[\#f9f7f2\], .dark .bg-slate-50 {
+  background-color: #020617;
+}
+
+.dark .border-\[\#e0e0e0\], .dark .border-gray-100, .dark .border-slate-100 {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 [dir="rtl"] {
@@ -124,3 +164,17 @@ h1, h2, h3, h4, h5, h6 {
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #c4a76d; border-radius: 10px; }
+
+.premium-text {
+  font-family: var(--font-heading);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.premium-subtitle {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
