@@ -1,30 +1,28 @@
 
 import { Store, Translation } from './types';
 
-export const STORES: Store[] = [
-  { id: 'amazon-sa', name: 'Amazon SA', nameAr: 'أمازون السعودية', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg', url: 'https://www.amazon.sa/', description: 'World of Amazon', descriptionAr: 'عالم أمازون بين يديك' },
-  { id: 'shein', name: 'SHEIN', nameAr: 'شي إن', logo: 'https://cdn.worldvectorlogo.com/logos/shein-1.svg', url: 'https://ar.shein.com/', description: 'Latest Fashion', descriptionAr: 'أحدث صيحات الموضة' },
-  { id: 'noon', name: 'NOON', nameAr: 'نون', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Noon_logo.svg', url: 'https://www.noon.com/', description: 'Everything here', descriptionAr: 'كل ما تحتاجه في مكان واحد' },
-  { id: 'aliexpress', name: 'AliExpress', nameAr: 'علي إكسبريس', logo: 'https://cdn.worldvectorlogo.com/logos/aliexpress-1.svg', url: 'https://www.aliexpress.com/', description: 'Global deals', descriptionAr: 'صفقات عالمية مذهلة' },
-  { id: 'trendyol', name: 'Trendyol', nameAr: 'ترينديول', logo: 'https://cdn.worldvectorlogo.com/logos/trendyol.svg', url: 'https://www.trendyol.com/', description: 'Turkish Quality', descriptionAr: 'الجودة والأناقة التركية' },
-  { id: 'niceone', name: 'Nice One', nameAr: 'نايس ون', logo: 'https://niceonesa.com/favicon.ico', url: 'https://niceonesa.com/', description: 'Beauty products', descriptionAr: 'منتجات التجميل والعناية' },
-  { id: 'assaf', name: 'Assaf Store', nameAr: 'عساف للعطور', logo: 'https://assaf.store/favicon.ico', url: 'https://assaf.store/', description: 'Premium Perfumes', descriptionAr: 'عطور عساف الفاخرة' },
-  { id: 'laverne', name: 'Laverne', nameAr: 'لافيرن', logo: 'https://laverne.com.sa/favicon.ico', url: 'https://laverne.com.sa/', description: 'Luxury Scents', descriptionAr: 'أرقى عطور لافيرن' },
-  { id: 'dakhon', name: 'Dakhon', nameAr: 'دخون الإماراتية', logo: 'https://dakhon.com/favicon.ico', url: 'https://dakhon.com/', description: 'Emirati Oud', descriptionAr: 'البخور والعطور الإماراتية' },
-  { id: 'alezz', name: 'Al-Ezz Oud', nameAr: 'العز للعود', logo: 'https://alezzoud.com/favicon.ico', url: 'https://alezzoud.com/', description: 'Authentic Oud', descriptionAr: 'أفخم أنواع العود' },
-  { id: 'iherb', name: 'iHerb', nameAr: 'إيهيرب', logo: 'https://cdn.worldvectorlogo.com/logos/iherb.svg', url: 'https://www.iherb.com/', description: 'Natural Health', descriptionAr: 'المكملات والعناية الصحية' },
-  { id: 'salla', name: 'Salla', nameAr: 'منصة سلة', logo: 'https://salla.sa/assets/images/logo-light.svg', url: 'https://salla.sa/', description: 'Saudi Stores', descriptionAr: 'المتاجر السعودية المحلية' },
+exexport const STORES: Store[] = [
+  // بدلاً من '/public/Icons/amazon.png' اجعلها '/Icons/amazon.png'
+  { id: 'amazon-sa', name: 'Amazon SA', nameAr: 'أمازون السعودية', logo: '/public/Icons/amazon.png', url: 'https://www.amazon.sa/', description: 'World of Amazon', descriptionAr: 'عالم أمازون بين يديك' },
+  { id: 'shein', name: 'SHEIN', nameAr: 'شي إن', logo: '/public/Icons/shein.png', url: 'https://ar.shein.com/', description: 'Latest Fashion', descriptionAr: 'أحدث صيحات الموضة' },
+  { id: 'noon', name: 'NOON', nameAr: 'نون', logo: '/public/Icons/noon.png', url: 'https://www.noon.com/', description: 'Everything here', descriptionAr: 'كل ما تحتاجه في مكان واحد' },
+  { id: 'aliexpress', name: 'AliExpress', nameAr: 'علي إكسبريس', logo: '/public/Icons/aliexpress.png', url: 'https://www.aliexpress.com/', description: 'Global deals', descriptionAr: 'صفقات عالمية مذهلة' },
+  { id: 'trendyol', name: 'Trendyol', nameAr: 'ترينديول', logo: '/public/Icons/trnd.png', url: 'https://www.trendyol.com/', description: 'Turkish Quality', descriptionAr: 'الجودة والأناقة التركية' },
+  { id: 'niceone', name: 'Nice One', nameAr: 'نايس ون', logo: 'public//Icons/nice1.png', url: 'https://niceonesa.com/', description: 'Beauty products', descriptionAr: 'منتجات التجميل والعناية' },
+  { id: 'assaf', name: 'Assaf Store', nameAr: 'عساف للعطور', logo: '/public/Icons/assaf.png', url: 'https://assaf.store/', description: 'Premium Perfumes', descriptionAr: 'عطور عساف الفاخرة' },
+  { id: 'laverne', name: 'Laverne', nameAr: 'لافيرن', logo: '/public/Icons/lavrne.png', url: 'https://laverne.com.sa/', description: 'Luxury Scents', descriptionAr: 'أرقى عطور لافيرن' },
+  { id: 'dakhon', name: 'Dakhon', nameAr: 'دخون الإماراتية', logo: '/public/Icons/Dkhon AlEmarat.png', url: 'https://dakhon.com/', description: 'Emirati Oud', descriptionAr: 'البخور والعطور الإماراتية' },
+  { id: 'alezz', name: 'Al-Ezz Oud', nameAr: 'العز للعود', logo: '/public/Icons/alez.png', url: 'https://alezzoud.com/', description: 'Authentic Oud', descriptionAr: 'أفخم أنواع العود' },
+  { id: 'iherb', name: 'iHerb', nameAr: 'إيهيرب', logo: '/public/Icons/iherb.png', url: 'https://www.iherb.com/', description: 'Natural Health', descriptionAr: 'المكملات والعناية الصحية' },
+  { id: 'salla', name: 'Salla', nameAr: 'منصة سلة', logo: '/public/Icons/salla.png', url: 'https://salla.sa/', description: 'Saudi Stores', descriptionAr: 'المتاجر السعودية المحلية' },
 ];
-
-export const APP_LOGO = "data:image/svg+xml,%3Csvg width='500' height='500' viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='goldGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23d4af37;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23f9f295;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23b8860b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M250 50 L423.2 150 L423.2 350 L250 450 L76.8 350 L76.8 150 Z' fill='none' stroke='url(%23goldGradient)' stroke-width='40' /%3E%3Cpath d='M200 200 L300 200 L300 300 L200 300 Z' fill='url(%23goldGradient)' /%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='180' font-weight='bold' fill='url(%23goldGradient)'%3EC%3C/text%3E%3C/svg%3E";
-// Note: To use your custom logo, upload it as 'logo.png' to the root directory and change APP_LOGO back to "./logo.png"
-
+export const APP_LOGO = '/public/Icons/logo_collection.png';
 export const SOCIAL_LINKS = {
   instagram: 'https://www.instagram.com/collection.yem?igsh=MXNla2JmMHI2MWdobQ==',
   facebook: 'https://www.facebook.com/collection.yemen.store?mibextid=wwXIfr&mibextid=wwXIfr',
   whatsapp: 'https://wa.me/967774757728',
   telegram: 'https://t.me/collection_yemen',
-  x: 'https://x.com/collection_yemen'
+ 
 };
 
 export const BRIDE_CATEGORIES = [
